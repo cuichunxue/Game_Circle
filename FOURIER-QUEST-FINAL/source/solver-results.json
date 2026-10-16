@@ -1,0 +1,947 @@
+[
+  {
+    "stage": 1,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 75,
+        "frequency": 1,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 2,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 40,
+        "frequency": 1,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 3,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 65,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 35,
+        "frequency": -3,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 4,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 60,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 40,
+        "frequency": -4,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 5,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 45,
+        "frequency": -2,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 6,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 60,
+        "frequency": 1,
+        "phase": -1.5707963267948966
+      },
+      {
+        "radius": 30,
+        "frequency": 2,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 4,
+        "frequency": -1,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 7,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -3,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 8,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -4,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 9,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -5,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 10,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -6,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 11,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -7,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 12,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -8,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 2,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 13,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -2,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 14,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -3,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 15,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -4,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 5,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 16,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -5,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 17,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -6,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 18,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -7,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 8,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 19,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -8,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 20,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -2,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 21,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -3,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 17,
+        "frequency": 4,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 22,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -4,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 13,
+        "frequency": -6,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 23,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -5,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 6,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 13,
+        "frequency": -7,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 11,
+        "frequency": 8,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 24,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -6,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 7,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 25,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -7,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 17,
+        "frequency": 8,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 13,
+        "frequency": -2,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 26,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -8,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 2,
+        "phase": 0
+      },
+      {
+        "radius": 13,
+        "frequency": -3,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 11,
+        "frequency": 4,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 27,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 3,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 28,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -3,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 4,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 13,
+        "frequency": -5,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 29,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -4,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 17,
+        "frequency": 5,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 13,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 11,
+        "frequency": 7,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 30,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -5,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 6,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 31,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 7,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 13,
+        "frequency": -8,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 11,
+        "frequency": 2,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 32,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -7,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 8,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 13,
+        "frequency": -2,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 11,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 9,
+        "frequency": -4,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 33,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -8,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 17,
+        "frequency": 2,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 13,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 11,
+        "frequency": 4,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 9,
+        "frequency": -5,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 8,
+        "frequency": 6,
+        "phase": 1.5707963267948966
+      }
+    ]
+  },
+  {
+    "stage": 34,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -2,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 13,
+        "frequency": -4,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 11,
+        "frequency": 5,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 9,
+        "frequency": -6,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 8,
+        "frequency": 7,
+        "phase": 0
+      },
+      {
+        "radius": 7,
+        "frequency": -8,
+        "phase": 0.5235987755982988
+      }
+    ]
+  },
+  {
+    "stage": 35,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 4,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 13,
+        "frequency": -5,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 36,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -4,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 5,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 13,
+        "frequency": -6,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 11,
+        "frequency": 7,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 37,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 24,
+        "frequency": -5,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 17,
+        "frequency": 6,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 13,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 11,
+        "frequency": 8,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 9,
+        "frequency": -2,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 38,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 24,
+        "frequency": -6,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 17,
+        "frequency": 7,
+        "phase": 0
+      },
+      {
+        "radius": 13,
+        "frequency": -8,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 11,
+        "frequency": 2,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 9,
+        "frequency": -3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 8,
+        "frequency": 4,
+        "phase": 0
+      }
+    ]
+  },
+  {
+    "stage": 39,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 24,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 17,
+        "frequency": 8,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 13,
+        "frequency": -2,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 11,
+        "frequency": 3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 9,
+        "frequency": -4,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 5,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 7,
+        "frequency": -6,
+        "phase": 1.0471975511965976
+      }
+    ]
+  },
+  {
+    "stage": 40,
+    "score": 100,
+    "solution": [
+      {
+        "radius": 55,
+        "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 24,
+        "frequency": -8,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 17,
+        "frequency": 2,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 13,
+        "frequency": -3,
+        "phase": 1.5707963267948966
+      }
+    ]
+  }
+]

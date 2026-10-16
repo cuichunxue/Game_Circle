@@ -1,0 +1,22 @@
+{
+  "name": "fourier-quest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node tests.mjs"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.5",
+    "typescript": "5.8.3",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "jsdom": "26.1.0",
+    "fake-indexeddb": "6.0.1"
+  }
+}

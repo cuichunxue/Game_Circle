@@ -1,0 +1,32 @@
+FOURIER QUEST — 修正版 1.1
+
+【PCで遊ぶ】
+ZIPを展開して、一番上の index.html をブラウザで開きます。
+音は画面をクリックしてから有効になります。
+ローカルファイルの保存動作はブラウザにより異なります。
+
+【iPhone・iPad】
+ZIPは「ファイル」アプリで保存・展開できます。
+ゲームは公開サイトをSafariで開く方法をおすすめします。
+https://fourier-quest.cuichunxue1984.chatgpt.site
+公開サイトは現在、所有者限定です。
+
+【収録】
+index.html : JavaScript・CSSを埋め込んだPC用
+web/ : GitHub Pagesなどの静的Web配信用（内容を公開フォルダへ配置）
+source/ : React / TypeScriptの編集用ソースとテスト
+
+【編集】
+sourceフォルダで npm ci、npm run build を実行します。
+node tests.mjs / node integration-tests.mjs / node journey-tests.mjs / node canvas-tests.mjs でテストできます。
+
+【修正内容】
+スマホの操作・観察レイアウト、ST4・5、途中保存、選択円の復元、
+描画過程の表示、図鑑の作品名と発見タグ、動きの軽減、タッチ判定を改善。
+
+【保存と検証】
+進行と作品は使用中のブラウザ内に保存されます。
+サイト版とダウンロード版の記録は自動では共有されません。
+ブラウザデータを消すと記録も消えます。
+全40ステージの100点解・基本操作・追加の回帰テストを確認済み。
+iPhone実機、実際の音の聞こえ方、子どもの試遊は未検証です。
