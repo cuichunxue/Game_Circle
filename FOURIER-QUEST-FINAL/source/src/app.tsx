@@ -1,66 +1,1425 @@
-import React,{useState,useEffect,useRef} from 'react';import{createRoot}from'react-dom/client';import{Circle,Stage,TAU,point,sample,score,stars,clone,fourier}from'./engine';import stagesData from './stages.json';import{readSave,writeSave}from'./storage';import*as audio from'./audio';import './style.css';
-const stages=stagesData as Stage[],worlds=['円の魔法学校','花びらの森','星空の研究所','フーリエ城'],colors=['#9c89ff','#67e9c8','#ffbf76','#ff85b6','#8bcaff','#e5dc84','#c0a2fb','#96e393'];
-const names={radius:'大きさ',frequency:'速さ',phase:'スタート角度',direction:'回る向き'};const initialSettings={volume:.35,muted:false,music:false,reduce:false,glow:true,traceMode:false};
-function Icon({name,size=20}:{name:string;size?:number}){const paths:Record<string,React.ReactNode>={spark:<><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7Z"/></>,map:<><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z"/><path d="M9 3v16m6-14v16"/></>,book:<><path d="M12 6c-3-3-7-3-10-2v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-3-1-7-1-10 2Z"/><path d="M12 6v15"/></>,sound:<><path d="M11 4 5 9H2v6h3l6 5Z"/><path d="M15 8q5 4 0 8m3-11q8 7 0 14"/></>,settings:<><circle cx="12" cy="12" r="3"/><path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3Z"/></>,undo:<><path d="M8 4 3 9l5 5M3 9h10a7 7 0 0 1 0 14"/></>,play:<path d="m8 4 12 8-12 8Z"/>,pause:<><path d="M8 4v16M16 4v16"/></>,bulb:<><path d="M8 16c0-3-3-3-3-7a7 7 0 0 1 14 0c0 4-3 4-3 7Z"/><path d="M8 20h8m-6 3h4"/></>,save:<><path d="M5 3h12l4 4v14H3V3Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></>,arrow:<path d="M4 12h16m-6-6 6 6-6 6"/>,close:<path d="m5 5 14 14M19 5 5 19"/>,pen:<><path d="m4 15 11-11 5 5L9 20l-6 1Z"/><path d="m13 6 5 5"/></>};return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.spark}</svg>}
-function Mini({cs}:{cs:Circle[]}){const pts=sample(cs,180),bound=Math.max(30,...pts.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))))*1.14;return <svg viewBox={`${-bound} ${-bound} ${bound*2} ${bound*2}`} className="mini"><path d={pts.map((p,i)=>`${i?'L':'M'}${p.x},${p.y}`).join(' ')+'Z'} fill="none" stroke="currentColor" strokeWidth={bound/35}/></svg>}
-function Orb({happy=false}:{happy?:boolean}){return <div className={'orb '+(happy?'happy':'')}><i/><b/><span>{happy?'⌣':'‿'}</span><em>✦</em></div>}
-function Canvas({cs,target,selected,setSelected,change,editable,playing,slow,settings,showTarget,showCircles,showTrace,ghost,drawing,onDraw,skin,dragProperty}:{cs:Circle[];target:Circle[];selected:number;setSelected:(v:number)=>void;change:(i:number,p:string,v:number,record?:boolean)=>void;editable:Record<number,string[]>;playing:boolean;slow:boolean;settings:any;showTarget:boolean;showCircles:boolean;showTrace:boolean;ghost:Circle[]|null;drawing:boolean;onDraw:(p:any[])=>void;skin:number;dragProperty:string}){
- const ref=useRef<HTMLCanvasElement>(null),live=useRef<any>({}),clock=useRef(0),geometry=useRef<any>({}),drag=useRef<any>(null),drawn=useRef<any[]>([]);live.current={cs,target,selected,playing,slow,settings,showTarget,showCircles,showTrace,ghost,drawing,skin};
- const cache=useRef<any>({});useEffect(()=>{if(!drag.current)clock.current=0;cache.current={own:sample(cs),target:sample(target),ghost:ghost?sample(ghost):null}},[cs,target,ghost]);
- useEffect(()=>{let raf=0,prev=0;const canvas=ref.current!,ctx=canvas.getContext('2d')!;const render=(now:number)=>{const p=live.current,rect=canvas.getBoundingClientRect(),w=rect.width,h=rect.height,dpr=Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const dt=Math.min(.05,(now-prev)/1000||0);prev=now;if(p.playing&&!p.drawing&&!drag.current)clock.current+=dt*(p.slow||p.settings.reduce?.3:.8);const t=clock.current;
- const extent=drag.current?.extent||Math.max(135,p.cs.reduce((s:number,c:Circle)=>s+c.radius,0),p.target.reduce((s:number,c:Circle)=>s+c.radius,0));const scale=Math.min(w,h)*.38/extent,cx=w/2,cy=h/2;geometry.current={scale,cx,cy,extent,centers:[]};
- for(let i=0;i<55;i++){const x=((i*173.73)%997)/997*w,y=((i*97.31)%701)/701*h;ctx.globalAlpha=.15+(i%5)*.06;ctx.fillStyle='#dfd5ff';ctx.beginPath();ctx.arc(x,y,i%7===0?1.5:.7,0,TAU);ctx.fill()}ctx.globalAlpha=1;
- ctx.save();ctx.translate(cx,cy);ctx.strokeStyle='rgba(178,157,230,.09)';ctx.lineWidth=1;for(let r=1;r<=3;r++){ctx.beginPath();ctx.arc(0,0,r*Math.min(w,h)*.115,0,TAU);ctx.stroke()}ctx.beginPath();ctx.moveTo(-w/2,0);ctx.lineTo(w/2,0);ctx.moveTo(0,-h/2);ctx.lineTo(0,h/2);ctx.stroke();
- const line=(pts:any[],color:string,width:number,dash:number[]=[],glow=0)=>{if(!pts?.length)return;ctx.beginPath();pts.forEach((v,i)=>i?ctx.lineTo(v.x*scale,v.y*scale):ctx.moveTo(v.x*scale,v.y*scale));ctx.closePath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.shadowColor=color;ctx.shadowBlur=p.settings.glow?glow:0;ctx.stroke();ctx.shadowBlur=0;ctx.setLineDash([])};
- if(p.showTarget&&!p.drawing)line(cache.current.target,'#c6c1de99',2,[5,7]);if(cache.current.ghost&&!p.drawing)line(cache.current.ghost,'#d8dbff35',1.5);const ink=['#9effe0','#edb5ff','#ffc790'][p.skin%3];if(p.showTrace&&!p.drawing){if(p.settings.traceMode){const n=Math.floor(((t%TAU)/TAU)*512);const pts=cache.current.own?.slice(0,n+1)||[];ctx.beginPath();pts.forEach((v:any,i:number)=>i?ctx.lineTo(v.x*scale,v.y*scale):ctx.moveTo(v.x*scale,v.y*scale));const tip=point(p.cs,t);ctx.lineTo(tip.x*scale,tip.y*scale);ctx.strokeStyle=ink;ctx.lineWidth=3;ctx.shadowColor=ink;ctx.shadowBlur=p.settings.glow?10:0;ctx.stroke();ctx.shadowBlur=0}else line(cache.current.own,ink,2.5,[],12)}
- let x=0,y=0;for(let i=0;i<p.cs.length;i++){const c=p.cs[i],nx=x+c.radius*Math.cos(c.frequency*t+c.phase),ny=y+c.radius*Math.sin(c.frequency*t+c.phase);geometry.current.centers.push({x,y,end:{x:nx,y:ny}});if(p.showCircles&&!p.drawing){ctx.strokeStyle=i===p.selected?colors[i%8]+'bb':colors[i%8]+'35';ctx.lineWidth=i===p.selected?1.5:1;ctx.beginPath();ctx.arc(x*scale,y*scale,c.radius*scale,0,TAU);ctx.stroke();ctx.beginPath();ctx.moveTo(x*scale,y*scale);ctx.lineTo(nx*scale,ny*scale);ctx.stroke();if(i===p.selected){ctx.fillStyle=colors[i%8];ctx.beginPath();ctx.arc(nx*scale,ny*scale,7,0,TAU);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()}}x=nx;y=ny}
- if(!p.drawing){ctx.shadowColor=ink;ctx.shadowBlur=p.settings.glow?22:0;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x*scale,y*scale,4,0,TAU);ctx.fill();ctx.shadowBlur=0;const start=point(p.target,0);if(p.showTarget){ctx.strokeStyle='#ddd5f0';ctx.strokeRect(start.x*scale-3,start.y*scale-3,6,6)}}else{line(drawn.current,ink,3,[],5)}ctx.restore();raf=requestAnimationFrame(render)};raf=requestAnimationFrame(render);return()=>cancelAnimationFrame(raf)},[]);
- const coords=(e:React.PointerEvent)=>{const r=ref.current!.getBoundingClientRect(),g=geometry.current;return{x:(e.clientX-r.left-g.cx)/g.scale,y:(e.clientY-r.top-g.cy)/g.scale}};
- return <canvas ref={ref} role="img" aria-label="お手本の破線と、円が描く光の軌跡。下のボタンでも操作できます。" onPointerDown={e=>{audio.unlock();const p=coords(e);if(drawing){drawn.current=[p];drag.current={draw:true};e.currentTarget.setPointerCapture(e.pointerId);return}const center=geometry.current.centers[selected];if(!center)return;const props=editable[selected]||[];if(!props.includes('radius')&&!props.includes('phase'))return;const g=geometry.current;const edge=Math.abs(Math.hypot(p.x-center.x,p.y-center.y)-cs[selected].radius)*g.scale;const handle=Math.hypot(p.x-center.end.x,p.y-center.end.y)*g.scale;if(edge>24&&handle>24)return;drag.current={extent:g.extent,center,property:props.includes(dragProperty)?dragProperty:props.includes('radius')?'radius':'phase',first:true};e.currentTarget.setPointerCapture(e.pointerId);}} onPointerMove={e=>{if(!drag.current)return;const p=coords(e),d=drag.current;if(d.draw){drawn.current.push(p);return}const v=d.property==='radius'?Math.max(0,Math.min(160,Math.round(Math.hypot(p.x-d.center.x,p.y-d.center.y)))):Math.atan2(p.y-d.center.y,p.x-d.center.x)-cs[selected].frequency*clock.current;change(selected,d.property,v,d.first);d.first=false}} onPointerUp={()=>{if(drag.current?.draw&&drawn.current.length>5)onDraw(drawn.current);drag.current=null}} onPointerCancel={()=>{drag.current=null}}/>
+import React, { useState, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
+import { Circle, Stage, TAU, point, sample, score, stars, clone, fourier } from "./engine";
+import stagesData from "./stages.json";
+import { readSave, writeSave } from "./storage";
+import * as audio from "./audio";
+import "./style.css";
+const stages = stagesData as Stage[],
+  worlds = ["円の魔法学校", "花びらの森", "星空の研究所", "フーリエ城"],
+  colors = ["#9c89ff", "#67e9c8", "#ffbf76", "#ff85b6", "#8bcaff", "#e5dc84", "#c0a2fb", "#96e393"];
+const names = { radius: "大きさ", frequency: "速さ", phase: "スタート角度", direction: "回る向き" };
+const initialSettings = { volume: 0.35, muted: false, music: false, reduce: false, glow: true, traceMode: false };
+function Icon({ name, size = 20 }: { name: string; size?: number }) {
+  const paths: Record<string, React.ReactNode> = {
+    spark: (
+      <>
+        <path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7Z" />
+      </>
+    ),
+    map: (
+      <>
+        <path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z" />
+        <path d="M9 3v16m6-14v16" />
+      </>
+    ),
+    book: (
+      <>
+        <path d="M12 6c-3-3-7-3-10-2v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-3-1-7-1-10 2Z" />
+        <path d="M12 6v15" />
+      </>
+    ),
+    sound: (
+      <>
+        <path d="M11 4 5 9H2v6h3l6 5Z" />
+        <path d="M15 8q5 4 0 8m3-11q8 7 0 14" />
+      </>
+    ),
+    settings: (
+      <>
+        <circle cx="12" cy="12" r="3" />
+        <path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3Z" />
+      </>
+    ),
+    undo: (
+      <>
+        <path d="M8 4 3 9l5 5M3 9h10a7 7 0 0 1 0 14" />
+      </>
+    ),
+    play: <path d="m8 4 12 8-12 8Z" />,
+    pause: (
+      <>
+        <path d="M8 4v16M16 4v16" />
+      </>
+    ),
+    bulb: (
+      <>
+        <path d="M8 16c0-3-3-3-3-7a7 7 0 0 1 14 0c0 4-3 4-3 7Z" />
+        <path d="M8 20h8m-6 3h4" />
+      </>
+    ),
+    save: (
+      <>
+        <path d="M5 3h12l4 4v14H3V3Z" />
+        <path d="M7 3v6h10V3M7 21v-8h10v8" />
+      </>
+    ),
+    arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
+    close: <path d="m5 5 14 14M19 5 5 19" />,
+    pen: (
+      <>
+        <path d="m4 15 11-11 5 5L9 20l-6 1Z" />
+        <path d="m13 6 5 5" />
+      </>
+    ),
+  };
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name] || paths.spark}
+    </svg>
+  );
 }
-function App(){const[stageId,setStageId]=useState(1),[mode,setMode]=useState<'quest'|'studio'>('quest'),[cs,setCs]=useState<Circle[]>(clone(stages[0].initial)),[selected,setSelected]=useState(0),[progress,setProgress]=useState<Record<string,any>>({}),[gallery,setGallery]=useState<any[]>([]),[settings,setSettings]=useState(initialSettings),[ready,setReady]=useState(false),[modal,setModal]=useState(''),[playing,setPlaying]=useState(true),[slow,setSlow]=useState(false),[showTarget,setShowTarget]=useState(true),[showCircles,setShowCircles]=useState(true),[showTrace,setShowTrace]=useState(true),[compare,setCompare]=useState(false),[ghost,setGhost]=useState<Circle[]|null>(null),[history,setHistory]=useState<Circle[][]>([]),[future,setFuture]=useState<Circle[][]>([]),[hintCount,setHintCount]=useState(0),[message,setMessage]=useState('こんにちは、ルミだよ。円のふちを、ぐーっと動かしてみよう！'),[celebrate,setCelebrate]=useState(false),[dirty,setDirty]=useState(false),[drawing,setDrawing]=useState(false),[drawCount,setDrawCount]=useState(32),[skin,setSkin]=useState(0),[dragProperty,setDragProperty]=useState('radius'),[saved,setSaved]=useState<boolean|null>(true),[details,setDetails]=useState(false),[artName,setArtName]=useState(''),[artTag,setArtTag]=useState('大きさを変えた');const drafts=useRef<Record<string,any>>({}),saveSnapshot=useRef<any>(null);const lastActivity=useRef(Date.now()),lastBest=useRef(0),repeats=useRef({key:'',n:0}),awarded=useRef(0),loaded=useRef(false);
- const stage=stages[stageId-1],isStudio=mode==='studio',value=isStudio?0:score(cs,stage),star=stars(value),total=Object.values(progress).reduce((s:number,p:any)=>s+(p.stars||0),0),editable=isStudio?Object.fromEntries(cs.map((_,i)=>[i,['radius','frequency','phase','direction']])):stage.editable,circle=cs[selected]||cs[0],props=editable[selected]||[];
- useEffect(()=>{readSave().then(d=>{if(d){setProgress(d.progress||{});setGallery(d.gallery||[]);setSettings({...initialSettings,...d.settings});const id=Math.min(40,Math.max(1,d.stageId||1));setStageId(id);setCs(d.cs?.length?d.cs:clone(stages[id-1].initial));setMode(d.mode||'quest');setHintCount(d.hintCount||0);setDirty(!!d.dirty);setSkin(d.skin||0);drafts.current=d.drafts||{};setSelected(d.selected??Number(Object.keys(stages[id-1].editable)[0]));setMessage('おかえり！ 前のつづきから、また試してみよう。')}else if(matchMedia('(prefers-reduced-motion: reduce)').matches)setSettings(s=>({...s,reduce:true}));setReady(true);loaded.current=true});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});},[]);
- useEffect(()=>{if(!ready)return;setSaved(null);const t=setTimeout(()=>{writeSave({progress,gallery,settings,stageId,cs,mode,hintCount,dirty,skin,selected,drafts:drafts.current}).then(setSaved)},150);return()=>clearTimeout(t)},[progress,gallery,settings,stageId,cs,mode,hintCount,dirty,skin,selected,ready]);
- saveSnapshot.current=ready?{progress,gallery,settings,stageId,cs,mode,hintCount,dirty,skin,selected,drafts:drafts.current}:null;
- useEffect(()=>{const flush=()=>{if(saveSnapshot.current)void writeSave(saveSnapshot.current)};const hide=()=>{if(document.hidden)flush()};window.addEventListener('pagehide',flush);document.addEventListener('visibilitychange',hide);return()=>{window.removeEventListener('pagehide',flush);document.removeEventListener('visibilitychange',hide)}},[]);
- useEffect(()=>{if(!modal)return;const prior=document.activeElement as HTMLElement|null;const dialog=document.querySelector<HTMLElement>('[role=dialog]');const items=()=>Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled),input,select,[tabindex="0"]')||[]);items()[0]?.focus();const handle=(e:KeyboardEvent)=>{if(e.key==='Escape')setModal('');if(e.key==='Tab'){const f=items();if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===f.at(-1)){e.preventDefault();f[0].focus()}}};document.addEventListener('keydown',handle);const overflow=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.removeEventListener('keydown',handle);document.body.style.overflow=overflow;prior?.focus()}},[modal]);
- useEffect(()=>{if(selected>=cs.length)setSelected(Math.max(0,cs.length-1))},[cs.length,selected]);
- useEffect(()=>{audio.configure(settings.volume,settings.muted)},[settings]);
- useEffect(()=>{const t=setInterval(()=>{if(document.hidden)return;if(settings.music&&playing&&!settings.reduce)audio.note([0,2,3,5][Math.floor(Date.now()/2400)%4],1.2,0,true)},2400);return()=>clearInterval(t)},[settings,playing]);
- useEffect(()=>{const t=setInterval(()=>{if(!isStudio&&dirty&&value<70&&Date.now()-lastActivity.current>90000){setMessage('ひとつだけ変えてみよう。ヒントで、見る場所を教えるよ。');lastActivity.current=Date.now()}},5000);return()=>clearInterval(t)},[isStudio,dirty,value]);
- useEffect(()=>{if(!ready||isStudio||!dirty)return;if(value>lastBest.current+1){lastBest.current=value;lastActivity.current=Date.now()}if(star>0){setProgress(p=>{const old=p[stageId]||{};const budget=stage.type==='budget'&&cs.filter(c=>c.radius>0).length<=(stage as any).budgetGoal;if((!budget||old.budgetCleared)&&(old.bestScore||0)>=value&&(hintCount>0||(old.soloScore||0)>=value))return p;return {...p,[stageId]:{...old,budgetCleared:old.budgetCleared||budget,bestScore:Math.max(old.bestScore||0,value),stars:Math.max(old.stars||0,star),cleared:true,soloScore:hintCount===0?Math.max(old.soloScore||0,value):old.soloScore||0,usedHint:old.usedHint||hintCount>0}}});if(star>awarded.current){awarded.current=star;setCelebrate(true);audio.win();setMessage(star===3?stage.discovery:'クリア！ 次へ進んでも、もっと試してもいいよ。');setTimeout(()=>setCelebrate(false),2200)}}},[value,ready,isStudio,dirty,hintCount]);
- function remember(){drafts.current[isStudio?'studio':String(stageId)]={cs:clone(cs),selected,hintCount,dirty,skin,history:clone(history),future:clone(future)}}
- function choose(id:number,fresh=false){remember();const prior=fresh?null:drafts.current[String(id)];audio.unlock();setStageId(id);setMode('quest');setCs(clone(prior?.cs||stages[id-1].initial));setSelected(prior?.selected??Number(Object.keys(stages[id-1].editable)[0]));setHistory(prior?.history||[]);setFuture(prior?.future||[]);setHintCount(prior?.hintCount||0);setDirty(prior?.dirty||false);setDetails(false);setDrawing(false);setGhost(null);setModal('');setShowTarget(true);setMessage(stages[id-1].mission);setProgress(p=>({...p,[id]:{...p[id],attempts:(p[id]?.attempts||0)+1}}));awarded.current=0;lastBest.current=0;lastActivity.current=Date.now();audio.note(3)}
- function change(i:number,p:string,v:number,record=true){audio.unlock();if(!editable[i]?.includes(p)&&!(p==='frequency'&&editable[i]?.includes('direction')))return;if(record){setHistory(h=>[...h.slice(-39),clone(cs)]);setFuture([]);setGhost(clone(cs))}setCs(old=>old.map((c,j)=>j===i?{...c,[p]:v}:c));setDirty(true);audio.note(p==='frequency'?Math.abs(v):Math.round(v/20));const key=i+p;if(repeats.current.key===key)repeats.current.n++;else repeats.current={key,n:1};if(repeats.current.n===12)setMessage('ゆっくり回すと、ちがいが見えるかも。「ゆっくり」を試してみよう。');else if(p==='frequency')setMessage('速さを変えたら、どこが変わったかな？');else if(p==='phase')setMessage('スタートする角度で、模様はどう変わるかな？');}
- function undo(redo=false){const from=redo?future:history;if(!from.length)return;const next=from.at(-1)!;if(redo){setFuture(from.slice(0,-1));setHistory(h=>[...h,clone(cs)])}else{setHistory(from.slice(0,-1));setFuture(f=>[...f,clone(cs)])}setGhost(clone(cs));setCs(next);setDirty(true);audio.note(1)}
- function hint(){const n=hintCount+1;setHintCount(n);let best={i:0,p:'radius',delta:0};Object.entries(stage.editable).forEach(([i,ps])=>ps.forEach(p=>{const prop=p==='direction'?'frequency':p;let diff=Math.abs((cs[+i] as any)[prop]-(stage.target[+i] as any)[prop]);if(p==='phase')diff=Math.abs(Math.atan2(Math.sin(diff),Math.cos(diff)));diff*=p==='radius'?1:p==='phase'?30:15;if(diff>best.delta)best={i:+i,p,delta:diff}}));setSelected(best.i);const prop=best.p==='direction'?'frequency':best.p,wanted=(stage.target[best.i] as any)[prop],current=(cs[best.i] as any)[prop];if(best.p==='direction'){setMessage(n===1?`円${best.i+1}の「回る向き」に注目してみよう。`:`円${best.i+1}を${wanted>0?'右まわり':'左まわり'}にして、形を比べてみよう。`)}else{const dest=best.p==='phase'?Math.round(((wanted*180/Math.PI)%360+360)%360)+'°':best.p==='frequency'?`${Math.abs(wanted)}倍・${wanted>0?'右まわり':'左まわり'}`:wanted;setMessage(n===1?`円${best.i+1}の「${(names as any)[best.p]}」に注目してみよう。`:n===2?`円${best.i+1}の${(names as any)[best.p]}を変えて「前と比べる」で見てみよう。`:`円${best.i+1}の${(names as any)[best.p]}は ${dest}。形の変化を見てみよう！`)}audio.note(5)}
- function studio(useCurrent=false){if(isStudio&&!useCurrent){setModal('');return}remember();const prior=useCurrent?null:drafts.current.studio;if(prior){setCs(clone(prior.cs));setSelected(prior.selected||0);setSkin(prior.skin||0)}setMode('studio');setDrawing(false);setShowTarget(false);setModal('');setHistory([]);setFuture([]);setMessage('正解は、きみの「おもしろい！」。好きな模様を発明しよう。');audio.unlock()}
- function saveArt(){const item={id:Date.now(),name:artName.trim().slice(0,30)||`ひかりの発見 ${gallery.length+1}`,tag:artTag,cs:clone(cs),skin,date:new Date().toLocaleDateString('ja-JP')};setGallery(g=>[item,...g].slice(0,100));setMessage('新しい模様を発見！ 図鑑にしまったよ。');setArtName('');setModal('');audio.win()}
- const activeCircles=cs.filter(c=>c.radius>0).length;const budgetGoal=(stage as any).budgetGoal;const all3=[stageId-1,stageId-2,stageId-3].every(id=>progress[id]?.stars===3);
- if(!ready)return <div className="loading"><img src="./icon.svg"/>魔法の準備中…</div>;
- return <div className={settings.reduce?'app reduced':'app'} onPointerDown={()=>audio.unlock()} onKeyDown={()=>audio.unlock()}><header><a className="brand" href="./" onClick={e=>e.preventDefault()}><img src="./icon.svg"/><span>FOURIER <b>QUEST</b><small>くるくる魔法のパズル王国</small></span></a><nav><button className={!isStudio?'active':''} onClick={()=>setModal('map')}><Icon name="map"/><span>冒険マップ</span></button><button className={isStudio?'active':''} onClick={()=>studio()}><Icon name="spark"/><span>自由にあそぶ</span></button><button onClick={()=>setModal('gallery')}><Icon name="book"/><span>発見図鑑</span></button></nav><div className="header-right"><span className="star-total">★ <b>{total}</b><small>/120</small></span><button className="icon-btn" aria-label="設定" onClick={()=>setModal('settings')}><Icon name="settings"/></button></div></header>
- <main><div className="intro"><div><span className="eyebrow">{isStudio?'YOUR LITTLE UNIVERSE':`WORLD 0${stage.world} · ${worlds[stage.world-1]}`}</span><h1>{isStudio?'ひらめき、くるくる。':'円をくるくる。ひらめき、キラキラ。'}</h1><p>{isStudio?'円を重ねて、まだ見たことのない模様を。':'ちょっと変えると、世界が変わる。今日はどんな発見があるかな？'}</p></div><div className="daily"><span>✧</span><div>まちがいも、だいはっけん。<small>きみのペースで、何度でも。</small></div></div></div>
- <div className="game-grid"><section className="play-area"><div className="stage-bar"><div className="stage-badge">{isStudio?'∞':String(stageId).padStart(2,'0')}</div><div><small>{isStudio?'CREATIVE STUDIO':'TODAY’S QUEST'}</small><h2>{isStudio?'きみだけの魔法工房':stage.title}</h2></div><span className="stage-stars" aria-label={`${isStudio?0:star}つ星`}>{[1,2,3].map(n=><i key={n} className={!isStudio&&star>=n?'earned':''}>★</i>)}</span></div>
- <div className={'universe '+(celebrate&&!settings.reduce?'celebrate':'')}><div className="canvas-tag"><span className="live-dot"/>{drawing?'指で、ひと筆描いてみよう':playing?'光の実験中':'じっくり観察中'}</div><div className="canvas-top-right"><button aria-label={settings.muted?'音をオン':'音をオフ'} onClick={()=>setSettings(s=>({...s,muted:!s.muted}))}><Icon name="sound"/>{settings.muted?'OFF':'ON'}</button></div><Canvas cs={cs} target={stage.target} selected={selected} setSelected={setSelected} change={change} editable={editable} playing={playing} slow={slow} settings={settings} showTarget={!isStudio&&showTarget} showCircles={showCircles} showTrace={showTrace} ghost={compare?ghost:null} drawing={drawing} onDraw={p=>{const result=fourier(p,drawCount);if(result.length){setHistory(h=>[...h,clone(cs)]);setCs(result);setSelected(0);setFuture([]);setDrawing(false);setMessage(`${drawCount}個の円が、きみの絵を描きはじめたよ！`);audio.win()}}} skin={skin} dragProperty={dragProperty}/><div className="canvas-legend"><span><i/>きみのひかり</span>{!isStudio&&<span><i className="dashed"/>お手本</span>}<span className="drag-label">{drawing?'終点と始点は自動でつながるよ':props.includes('radius')||props.includes('phase')?'◉ 円のふちを動かそう':'↓ 下のボタンで変えよう'}</span></div>{celebrate&&<div className="celebration"><span>✦ ✧ ✦</span><strong>{star===3?'ぴったり！ 大はっけん！':'できた！ 魔法がかかった！'}</strong></div>}</div>
- <div className="canvas-controls"><button aria-expanded={details} onClick={()=>setDetails(!details)}>{details?"表示をとじる":"見え方"}</button><button className="play-button" onClick={()=>setPlaying(!playing)}><Icon name={playing?'pause':'play'}/>{playing?'とめる':'まわす'}</button><button className={slow?'selected':''} onClick={()=>setSlow(!slow)}>◷ ゆっくり</button><span className={details?"display-options open":"display-options"}><div className="control-divider"/><label><input type="checkbox" checked={showCircles} onChange={e=>setShowCircles(e.target.checked)}/>円</label><label><input type="checkbox" checked={showTrace} onChange={e=>setShowTrace(e.target.checked)}/>軌跡</label>{!isStudio&&<label><input type="checkbox" checked={showTarget} onChange={e=>setShowTarget(e.target.checked)}/>お手本</label>}<label><input type="checkbox" checked={compare} onChange={e=>setCompare(e.target.checked)}/>前と比べる</label><label><input type="checkbox" checked={settings.traceMode} onChange={e=>setSettings(s=>({...s,traceMode:e.target.checked}))}/>描くところを見る</label></span></div>
- <div className="companion"><Orb happy={celebrate}/><div><small>魔法の相棒 ルミ</small><p aria-live="polite">{message}</p></div></div>
- </section><aside className="workbench"><div className="bench-title"><span className="eyebrow">LET’S EXPERIMENT</span><h2>魔法をつくろう <Icon name="spark"/></h2><p>{isStudio?'「もしも」を、ためしてみよう。':stage.mission}</p></div>{isStudio&&<div className="presets">{['花のたね','星のたね','ひらめき'].map((n,i)=><button key={n} onClick={()=>{setHistory(h=>[...h,clone(cs)]);setFuture([]);setGhost(clone(cs));setCs(i<2?[{radius:65,frequency:1,phase:0},{radius:i===0?32:18,frequency:i===0?-4:-4,phase:i===0?0:Math.PI}]:Array.from({length:3},(_,j)=>({radius:j===0?60:15+Math.floor(Math.random()*35),frequency:j===0?1:-(2+Math.floor(Math.random()*6)),phase:Math.floor(Math.random()*6)*Math.PI/3})));setSelected(1);setMessage('この形を、きみならどう変える？');audio.note(5)}}>{n}</button>)}</div>}<div className="circle-heading"><b>① 円をえらぶ</b><span>{cs.length} / {isStudio?128:stage.maxCircles} 個</span></div><div className="circle-tabs">{cs.map((c,i)=><button key={i} className={selected===i?'selected':''} style={{'--circle-color':colors[i%8]} as any} onClick={()=>{setSelected(i);audio.note(i)}} aria-label={`円${i+1}を選択`}><span/> {i+1}{!editable[i]?.length&&<small>固定</small>}</button>)}</div>
- <div className="adjust-heading"><b>② ちょっと変えてみよう</b><span style={{color:colors[selected%8]}}>円 {selected+1}</span></div>
- {props.includes('radius')&&props.includes('phase')&&<div className="drag-mode"><span>指で変えるもの</span><button className={dragProperty==='radius'?'selected':''} onClick={()=>setDragProperty('radius')}>大きさ</button><button className={dragProperty==='phase'?'selected':''} onClick={()=>setDragProperty('phase')}>角度</button></div>}
- {!props.length&&<p className="fixed-note">この円はお手本係。ほかの円をえらぼう。</p>}
- {(['radius','frequency','phase'] as const).filter(p=>props.includes(p)||(p==='frequency'&&props.includes('direction'))).map(p=>{const v=p==='phase'?Math.round(((circle.phase*180/Math.PI)%360+360)%360):p==='frequency'?Math.abs(circle.frequency):Math.round(circle.radius);return <div className="parameter" key={p}><div className="parameter-label"><label htmlFor={p}>{p==='frequency'&&props.includes('direction')&&!props.includes('frequency')?'回る向き':names[p]}</label><output>{v}<small>{p==='phase'?'°':p==='frequency'?'倍':''}</small></output></div>{!(p==='frequency'&&props.includes('direction')&&!props.includes('frequency'))&&<div className="stepper"><button aria-label={`${names[p]}を減らす`} onClick={()=>change(selected,p,p==='phase'?circle.phase-Math.PI/180:p==='frequency'?Math.sign(circle.frequency)*Math.max(1,Math.abs(circle.frequency)-1):Math.max(0,Math.round(circle.radius)-1))}>−</button><input id={p} type="range" min={p==='frequency'?1:0} max={p==='radius'?160:p==='frequency'?Math.max(12,v):359} step="1" value={v} onPointerDown={()=>{setHistory(h=>[...h,clone(cs)]);setFuture([]);setGhost(clone(cs))}} onKeyDown={e=>{if(e.key.startsWith('Arrow')){setHistory(h=>[...h.slice(-39),clone(cs)]);setFuture([]);setGhost(clone(cs))}}} onChange={e=>change(selected,p,p==='phase'?+e.target.value*Math.PI/180:p==='frequency'?+e.target.value*Math.sign(circle.frequency):+e.target.value,false)}/><button aria-label={`${names[p]}を増やす`} onClick={()=>change(selected,p,p==='phase'?circle.phase+Math.PI/180:p==='frequency'?Math.sign(circle.frequency)*Math.min(128,Math.abs(circle.frequency)+1):Math.min(160,Math.round(circle.radius)+1))}>＋</button></div>}{p==='frequency'&&(isStudio||stageId!==4)&&<div className="direction"><button className={circle.frequency>0?'selected':''} onClick={()=>change(selected,'frequency',Math.abs(circle.frequency))}>↻ 右まわり</button><button className={circle.frequency<0?'selected':''} onClick={()=>change(selected,'frequency',-Math.abs(circle.frequency))}>↺ 左まわり</button></div>}</div>})}
- <button className="compare-action" disabled={!ghost} onClick={()=>{setCompare(!compare);setDetails(true)}}>{compare?"比較をとじる":"前の線と比べる"}</button><div className="edit-actions"><button disabled={!history.length} onClick={()=>undo()}><Icon name="undo" size={16}/>もどす</button><button disabled={!future.length} onClick={()=>undo(true)}>↪ やり直す</button><button onClick={()=>setModal('reset')}>↺ 最初から</button></div>
- {!isStudio?<><>{stage.type==='budget'&&<p className="observation">円 {budgetGoal} 個以下で70%以上に挑戦！ 使用中：{activeCircles}個 {value>=70&&activeCircles<=budgetGoal?"✦ 節約できた！":""}</p>}<div className="score-card"><div><span>{dirty&&star?star===3?'ぴったり！':'クリア！ もっと近づけてもいいね':'お手本とのぴったり度'}</span><strong>{value>99.95?100:Math.floor(value)}<small>%</small></strong></div><div className="score-track"><i style={{width:`${value}%`}}/>{[70,85,95].map(n=><span key={n} style={{left:`${n}%`}}/>)}</div><small>70%でクリア · 85%で★★ · 95%で★★★</small></div></><div className="bench-actions"><button className="hint" onClick={hint}><Icon name="bulb"/>ヒント{hintCount>0&&` ${hintCount}`}</button><button className="primary" disabled={!progress[stageId]?.cleared} onClick={()=>stageId<40?choose(stageId+1):studio()}>{stageId===40?'自由にあそぶ':'つぎへ'}<Icon name="arrow"/></button></div>{stageId===4&&<p className="observation">円2は1周の間に {Math.abs(cs[1].frequency)} 回まわるよ。点数が同じでも、線を比べてみよう。</p>}<p className="gentle-note">ヒントを使っても、星はぜんぶもらえるよ。</p>{all3&&<button className="challenge" onClick={()=>setMessage('追加チャレンジ！ 変える前に形を予想して、1回の操作で近づけられるかな？')}>✧ ひらめきチャレンジ</button>}</>:<><div className="studio-actions"><button disabled={cs.length>=128} onClick={()=>{setHistory(h=>[...h,clone(cs)]);setFuture([]);setCs(c=>[...c,{radius:15,frequency:-(c.length+1),phase:0}]);setSelected(cs.length)}}>＋ 円をふやす</button><button disabled={cs.length<=1} onClick={()=>{setHistory(h=>[...h,clone(cs)]);setFuture([]);setCs(c=>c.filter((_,i)=>i!==selected));setSelected(0)}}>− 円をへらす</button></div><button className="draw-button" onClick={()=>setDrawing(!drawing)}><Icon name="pen"/>{drawing?'お絵かきをやめる':'描いた絵を、円にする'}</button><label className="draw-count">お絵かきの円の数<select value={drawCount} onChange={e=>setDrawCount(+e.target.value)}>{[8,16,32,64,128].map(n=><option key={n}>{n}</option>)}</select></label></>}
- <button className="carry-art" onClick={()=>studio(true)}>この模様で自由にあそぶ</button><button className="save-art" onClick={()=>setModal('save')}><Icon name="save" size={17}/>この模様を図鑑にしまう</button></aside></div>
- <section className="discovery-strip"><div><span className="tiny-orbit">✧</span><div><b>正解の、その先へ。</b><p>できた形を変えてみよう。きみだけの発見が待っている。</p></div></div><button onClick={()=>studio()}>自由にあそぶ <Icon name="arrow" size={17}/></button></section><footer><span>FOURIER QUEST <i>·</i> 小さな「なぜ？」が、大きな魔法に。</span><span>{saved===null?'保存中…':saved?'✓ この端末に自動保存':'保存できませんでした。端末の空き容量を確認してください。'}</span></footer></main>
- {modal&&<div className="overlay" onClick={()=>setModal('')}><section className={'modal '+(modal==='map'?'wide':'')} role="dialog" aria-modal="true" aria-label={modal==='map'?'冒険マップ':modal==='gallery'?'発見図鑑':modal==='save'?'作品を保存':modal==='reset'?'最初から':'設定'} onClick={e=>e.stopPropagation()}><button className="modal-close icon-btn" aria-label="閉じる" onClick={()=>setModal('')}><Icon name="close"/></button>
- {modal==='map'&&<><span className="eyebrow">YOUR ADVENTURE</span><h2>40の「できた！」を見つけよう。</h2><p>ひとつクリアすると、次の扉がひらくよ。</p>{worlds.map((w,wi)=><div className="world" key={w}><h3><span>0{wi+1}</span>{w}</h3><div className="stage-grid">{stages.filter(s=>s.world===wi+1).map(s=>{const unlocked=s.id===1||progress[s.id-1]?.cleared;return <button key={s.id} disabled={!unlocked} className={s.id===stageId?'current':''} onClick={()=>choose(s.id)}><div className="map-thumb"><Mini cs={s.target}/></div><b>{String(s.id).padStart(2,'0')}</b><span>{s.title}</span><small>{unlocked?'★'.repeat(progress[s.id]?.stars||0)+'☆'.repeat(3-(progress[s.id]?.stars||0)):'🔒'}{progress[s.id]?.soloScore>=95?' 自力！':''}{progress[s.id]?.budgetCleared?' 節約！':''}</small></button>})}</div></div>)}</>}
- {modal==='gallery'&&<><span className="eyebrow">DISCOVERY COLLECTION</span><h2>きみの発見図鑑</h2><p>模様をえらぶと、もう一度あそべるよ。</p>{!gallery.length?<div className="empty"><Orb/><h3>最初の発見は、どんな形？</h3><p>好きな模様ができたら「図鑑にしまう」を押してね。</p></div>:<div className="gallery-grid">{gallery.map(g=><button key={g.id} onClick={()=>{studio(true);setCs(clone(g.cs));setSelected(0);setSkin(g.skin||0)}}><Mini cs={g.cs}/><b>{g.name}</b><small>{g.date} · {g.cs.length}個の円</small><small>{g.tag||"自由な発見"}</small></button>)}</div>}</>}
- {modal==='settings'&&<><span className="eyebrow">MAKE YOURSELF COMFORTABLE</span><h2>あそびやすくしよう</h2><label className="setting"><span>音を出す</span><input type="checkbox" checked={!settings.muted} onChange={e=>setSettings(s=>({...s,muted:!e.target.checked}))}/></label><label className="setting"><span>音量</span><input aria-label="音量" type="range" min="0" max="1" step=".05" value={settings.volume} onChange={e=>setSettings(s=>({...s,volume:+e.target.value}))}/></label><label className="setting"><span>星空のメロディー</span><input type="checkbox" checked={settings.music} onChange={e=>setSettings(s=>({...s,music:e.target.checked}))}/></label><label className="setting"><span>動きをひかえめに</span><input type="checkbox" checked={settings.reduce} onChange={e=>setSettings(s=>({...s,reduce:e.target.checked}))}/></label><label className="setting"><span>光をやわらかく輝かせる</span><input type="checkbox" checked={settings.glow} onChange={e=>setSettings(s=>({...s,glow:e.target.checked}))}/></label><h3>ひかりの色</h3><div className="skins">{['ミント','すみれ','夕やけ'].map((n,i)=><button key={n} disabled={i>0&&total<i*6} className={skin===i?'selected':''} onClick={()=>setSkin(i)}>{n}{i>0&&total<i*6?` ★${i*6}で解放`:''}</button>)}</div><p className="privacy">進み具合と作品は、この端末のブラウザに保存されます。ブラウザのデータを消すと記録も消えます。</p></>}
- {modal==='save'&&<><h2>この発見に名前をつけよう</h2><label className="art-field">作品の名前<input maxLength={30} value={artName} placeholder={`ひかりの発見 ${gallery.length+1}`} onChange={e=>setArtName(e.target.value)}/></label><label className="art-field">何を試した？<select value={artTag} onChange={e=>setArtTag(e.target.value)}>{['大きさを変えた','速さを変えた','回る向きを変えた','角度を変えた','円を組み合わせた','絵から作った'].map(t=><option key={t}>{t}</option>)}</select></label><p>図鑑から開いても元の作品は残るよ。続きを変えて、別の作品も作ろう！</p><button className="primary" onClick={saveArt}>図鑑に保存</button></>}
- {modal==='reset'&&<><h2>最初の形にもどす？</h2><p>今の調整をリセットします。集めた星と図鑑は残るよ。</p><div className="dialog-actions"><button onClick={()=>setModal('')}>まだあそぶ</button><button className="primary" onClick={()=>{if(isStudio){setHistory(h=>[...h,clone(cs)]);setFuture([]);setCs([{radius:70,frequency:1,phase:0},{radius:35,frequency:-3,phase:0}]);setSelected(0);setModal('')}else choose(stageId,true)}}>もどす</button></div></>}
- </section></div>}
- </div>
+function Mini({ cs }: { cs: Circle[] }) {
+  const pts = sample(cs, 180),
+    bound = Math.max(30, ...pts.map((p) => Math.max(Math.abs(p.x), Math.abs(p.y)))) * 1.14;
+  return (
+    <svg viewBox={`${-bound} ${-bound} ${bound * 2} ${bound * 2}`} className="mini">
+      <path
+        d={pts.map((p, i) => `${i ? "L" : "M"}${p.x},${p.y}`).join(" ") + "Z"}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={bound / 35}
+      />
+    </svg>
+  );
 }
-createRoot(document.getElementById('root')!).render(<App/>);
+function Orb({ happy = false }: { happy?: boolean }) {
+  return (
+    <div className={"orb " + (happy ? "happy" : "")}>
+      <i />
+      <b />
+      <span>{happy ? "⌣" : "‿"}</span>
+      <em>✦</em>
+    </div>
+  );
+}
+function Canvas({
+  cs,
+  target,
+  selected,
+  setSelected,
+  change,
+  editable,
+  playing,
+  slow,
+  settings,
+  showTarget,
+  showCircles,
+  showTrace,
+  ghost,
+  drawing,
+  onDraw,
+  skin,
+  dragProperty,
+}: {
+  cs: Circle[];
+  target: Circle[];
+  selected: number;
+  setSelected: (v: number) => void;
+  change: (i: number, p: string, v: number, record?: boolean) => void;
+  editable: Record<number, string[]>;
+  playing: boolean;
+  slow: boolean;
+  settings: any;
+  showTarget: boolean;
+  showCircles: boolean;
+  showTrace: boolean;
+  ghost: Circle[] | null;
+  drawing: boolean;
+  onDraw: (p: any[]) => void;
+  skin: number;
+  dragProperty: string;
+}) {
+  const ref = useRef<HTMLCanvasElement>(null),
+    live = useRef<any>({}),
+    clock = useRef(0),
+    geometry = useRef<any>({}),
+    drag = useRef<any>(null),
+    drawn = useRef<any[]>([]);
+  live.current = { cs, target, selected, playing, slow, settings, showTarget, showCircles, showTrace, ghost, drawing, skin };
+  const cache = useRef<any>({});
+  useEffect(() => {
+    if (!drag.current) clock.current = 0;
+    cache.current = { own: sample(cs), target: sample(target), ghost: ghost ? sample(ghost) : null };
+  }, [cs, target, ghost]);
+  useEffect(() => {
+    let raf = 0,
+      prev = 0;
+    const canvas = ref.current!,
+      ctx = canvas.getContext("2d")!;
+    const render = (now: number) => {
+      const p = live.current,
+        rect = canvas.getBoundingClientRect(),
+        w = rect.width,
+        h = rect.height,
+        dpr = Math.min(devicePixelRatio || 1, 2);
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      const dt = Math.min(0.05, (now - prev) / 1000 || 0);
+      prev = now;
+      if (p.playing && !p.drawing && !drag.current) clock.current += dt * (p.slow || p.settings.reduce ? 0.3 : 0.8);
+      const t = clock.current;
+      const extent =
+        drag.current?.extent ||
+        Math.max(
+          135,
+          p.cs.reduce((s: number, c: Circle) => s + c.radius, 0),
+          p.target.reduce((s: number, c: Circle) => s + c.radius, 0),
+        );
+      const scale = (Math.min(w, h) * 0.38) / extent,
+        cx = w / 2,
+        cy = h / 2;
+      geometry.current = { scale, cx, cy, extent, centers: [] };
+      for (let i = 0; i < 55; i++) {
+        const x = (((i * 173.73) % 997) / 997) * w,
+          y = (((i * 97.31) % 701) / 701) * h;
+        ctx.globalAlpha = 0.15 + (i % 5) * 0.06;
+        ctx.fillStyle = "#dfd5ff";
+        ctx.beginPath();
+        ctx.arc(x, y, i % 7 === 0 ? 1.5 : 0.7, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.strokeStyle = "rgba(178,157,230,.09)";
+      ctx.lineWidth = 1;
+      for (let r = 1; r <= 3; r++) {
+        ctx.beginPath();
+        ctx.arc(0, 0, r * Math.min(w, h) * 0.115, 0, TAU);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.moveTo(-w / 2, 0);
+      ctx.lineTo(w / 2, 0);
+      ctx.moveTo(0, -h / 2);
+      ctx.lineTo(0, h / 2);
+      ctx.stroke();
+      const line = (pts: any[], color: string, width: number, dash: number[] = [], glow = 0) => {
+        if (!pts?.length) return;
+        ctx.beginPath();
+        pts.forEach((v, i) => (i ? ctx.lineTo(v.x * scale, v.y * scale) : ctx.moveTo(v.x * scale, v.y * scale)));
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.setLineDash(dash);
+        ctx.shadowColor = color;
+        ctx.shadowBlur = p.settings.glow ? glow : 0;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.setLineDash([]);
+      };
+      if (p.showTarget && !p.drawing) line(cache.current.target, "#c6c1de99", 2, [5, 7]);
+      if (cache.current.ghost && !p.drawing) line(cache.current.ghost, "#d8dbff35", 1.5);
+      const ink = ["#9effe0", "#edb5ff", "#ffc790"][p.skin % 3];
+      if (p.showTrace && !p.drawing) {
+        if (p.settings.traceMode) {
+          const n = Math.floor(((t % TAU) / TAU) * 512);
+          const pts = cache.current.own?.slice(0, n + 1) || [];
+          ctx.beginPath();
+          pts.forEach((v: any, i: number) => (i ? ctx.lineTo(v.x * scale, v.y * scale) : ctx.moveTo(v.x * scale, v.y * scale)));
+          const tip = point(p.cs, t);
+          ctx.lineTo(tip.x * scale, tip.y * scale);
+          ctx.strokeStyle = ink;
+          ctx.lineWidth = 3;
+          ctx.shadowColor = ink;
+          ctx.shadowBlur = p.settings.glow ? 10 : 0;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        } else line(cache.current.own, ink, 2.5, [], 12);
+      }
+      let x = 0,
+        y = 0;
+      for (let i = 0; i < p.cs.length; i++) {
+        const c = p.cs[i],
+          nx = x + c.radius * Math.cos(c.frequency * t + c.phase),
+          ny = y + c.radius * Math.sin(c.frequency * t + c.phase);
+        geometry.current.centers.push({ x, y, end: { x: nx, y: ny } });
+        if (p.showCircles && !p.drawing) {
+          ctx.strokeStyle = i === p.selected ? colors[i % 8] + "bb" : colors[i % 8] + "35";
+          ctx.lineWidth = i === p.selected ? 1.5 : 1;
+          ctx.beginPath();
+          ctx.arc(x * scale, y * scale, c.radius * scale, 0, TAU);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x * scale, y * scale);
+          ctx.lineTo(nx * scale, ny * scale);
+          ctx.stroke();
+          if (i === p.selected) {
+            ctx.fillStyle = colors[i % 8];
+            ctx.beginPath();
+            ctx.arc(nx * scale, ny * scale, 7, 0, TAU);
+            ctx.fill();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+        }
+        x = nx;
+        y = ny;
+      }
+      if (!p.drawing) {
+        ctx.shadowColor = ink;
+        ctx.shadowBlur = p.settings.glow ? 22 : 0;
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(x * scale, y * scale, 4, 0, TAU);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        const start = point(p.target, 0);
+        if (p.showTarget) {
+          ctx.strokeStyle = "#ddd5f0";
+          ctx.strokeRect(start.x * scale - 3, start.y * scale - 3, 6, 6);
+        }
+      } else {
+        line(drawn.current, ink, 3, [], 5);
+      }
+      ctx.restore();
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const coords = (e: React.PointerEvent) => {
+    const r = ref.current!.getBoundingClientRect(),
+      g = geometry.current;
+    return { x: (e.clientX - r.left - g.cx) / g.scale, y: (e.clientY - r.top - g.cy) / g.scale };
+  };
+  return (
+    <canvas
+      ref={ref}
+      role="img"
+      aria-label="お手本の破線と、円が描く光の軌跡。下のボタンでも操作できます。"
+      onPointerDown={(e) => {
+        audio.unlock();
+        const p = coords(e);
+        if (drawing) {
+          drawn.current = [p];
+          drag.current = { draw: true };
+          e.currentTarget.setPointerCapture(e.pointerId);
+          return;
+        }
+        const center = geometry.current.centers[selected];
+        if (!center) return;
+        const props = editable[selected] || [];
+        if (!props.includes("radius") && !props.includes("phase")) return;
+        const g = geometry.current;
+        const edge = Math.abs(Math.hypot(p.x - center.x, p.y - center.y) - cs[selected].radius) * g.scale;
+        const handle = Math.hypot(p.x - center.end.x, p.y - center.end.y) * g.scale;
+        if (edge > 24 && handle > 24) return;
+        drag.current = {
+          extent: g.extent,
+          center,
+          property: props.includes(dragProperty) ? dragProperty : props.includes("radius") ? "radius" : "phase",
+          first: true,
+        };
+        e.currentTarget.setPointerCapture(e.pointerId);
+      }}
+      onPointerMove={(e) => {
+        if (!drag.current) return;
+        const p = coords(e),
+          d = drag.current;
+        if (d.draw) {
+          drawn.current.push(p);
+          return;
+        }
+        const v =
+          d.property === "radius"
+            ? Math.max(0, Math.min(160, Math.round(Math.hypot(p.x - d.center.x, p.y - d.center.y))))
+            : Math.atan2(p.y - d.center.y, p.x - d.center.x) - cs[selected].frequency * clock.current;
+        change(selected, d.property, v, d.first);
+        d.first = false;
+      }}
+      onPointerUp={() => {
+        if (drag.current?.draw && drawn.current.length > 5) onDraw(drawn.current);
+        drag.current = null;
+      }}
+      onPointerCancel={() => {
+        drag.current = null;
+      }}
+    />
+  );
+}
+function App() {
+  const [stageId, setStageId] = useState(1),
+    [mode, setMode] = useState<"quest" | "studio">("quest"),
+    [cs, setCs] = useState<Circle[]>(clone(stages[0].initial)),
+    [selected, setSelected] = useState(0),
+    [progress, setProgress] = useState<Record<string, any>>({}),
+    [gallery, setGallery] = useState<any[]>([]),
+    [settings, setSettings] = useState(initialSettings),
+    [ready, setReady] = useState(false),
+    [modal, setModal] = useState(""),
+    [playing, setPlaying] = useState(true),
+    [slow, setSlow] = useState(false),
+    [showTarget, setShowTarget] = useState(true),
+    [showCircles, setShowCircles] = useState(true),
+    [showTrace, setShowTrace] = useState(true),
+    [compare, setCompare] = useState(false),
+    [ghost, setGhost] = useState<Circle[] | null>(null),
+    [history, setHistory] = useState<Circle[][]>([]),
+    [future, setFuture] = useState<Circle[][]>([]),
+    [hintCount, setHintCount] = useState(0),
+    [message, setMessage] = useState("こんにちは、ルミだよ。円のふちを、ぐーっと動かしてみよう！"),
+    [celebrate, setCelebrate] = useState(false),
+    [dirty, setDirty] = useState(false),
+    [drawing, setDrawing] = useState(false),
+    [drawCount, setDrawCount] = useState(32),
+    [skin, setSkin] = useState(0),
+    [dragProperty, setDragProperty] = useState("radius"),
+    [saved, setSaved] = useState<boolean | null>(true),
+    [details, setDetails] = useState(false),
+    [artName, setArtName] = useState(""),
+    [artTag, setArtTag] = useState("大きさを変えた");
+  const drafts = useRef<Record<string, any>>({}),
+    saveSnapshot = useRef<any>(null);
+  const lastActivity = useRef(Date.now()),
+    lastBest = useRef(0),
+    repeats = useRef({ key: "", n: 0 }),
+    awarded = useRef(0),
+    loaded = useRef(false);
+  const stage = stages[stageId - 1],
+    isStudio = mode === "studio",
+    value = isStudio ? 0 : score(cs, stage),
+    star = stars(value),
+    total = Object.values(progress).reduce((s: number, p: any) => s + (p.stars || 0), 0),
+    editable = isStudio ? Object.fromEntries(cs.map((_, i) => [i, ["radius", "frequency", "phase", "direction"]])) : stage.editable,
+    circle = cs[selected] || cs[0],
+    props = editable[selected] || [];
+  useEffect(() => {
+    readSave().then((d) => {
+      if (d) {
+        setProgress(d.progress || {});
+        setGallery(d.gallery || []);
+        setSettings({ ...initialSettings, ...d.settings });
+        const id = Math.min(40, Math.max(1, d.stageId || 1));
+        setStageId(id);
+        setCs(d.cs?.length ? d.cs : clone(stages[id - 1].initial));
+        setMode(d.mode || "quest");
+        setHintCount(d.hintCount || 0);
+        setDirty(!!d.dirty);
+        setSkin(d.skin || 0);
+        drafts.current = d.drafts || {};
+        setSelected(d.selected ?? Number(Object.keys(stages[id - 1].editable)[0]));
+        setMessage("おかえり！ 前のつづきから、また試してみよう。");
+      } else if (matchMedia("(prefers-reduced-motion: reduce)").matches) setSettings((s) => ({ ...s, reduce: true }));
+      setReady(true);
+      loaded.current = true;
+    });
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }, []);
+  useEffect(() => {
+    if (!ready) return;
+    setSaved(null);
+    const t = setTimeout(() => {
+      writeSave({ progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, drafts: drafts.current }).then(
+        setSaved,
+      );
+    }, 150);
+    return () => clearTimeout(t);
+  }, [progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, ready]);
+  saveSnapshot.current = ready
+    ? { progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, drafts: drafts.current }
+    : null;
+  useEffect(() => {
+    const flush = () => {
+      if (saveSnapshot.current) void writeSave(saveSnapshot.current);
+    };
+    const hide = () => {
+      if (document.hidden) flush();
+    };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", hide);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", hide);
+    };
+  }, []);
+  useEffect(() => {
+    if (!modal) return;
+    const prior = document.activeElement as HTMLElement | null;
+    const dialog = document.querySelector<HTMLElement>("[role=dialog]");
+    const items = () => Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled),input,select,[tabindex="0"]') || []);
+    items()[0]?.focus();
+    const handle = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setModal("");
+      if (e.key === "Tab") {
+        const f = items();
+        if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) {
+          e.preventDefault();
+          f.at(-1)?.focus();
+        } else if (!e.shiftKey && document.activeElement === f.at(-1)) {
+          e.preventDefault();
+          f[0].focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handle);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handle);
+      document.body.style.overflow = overflow;
+      prior?.focus();
+    };
+  }, [modal]);
+  useEffect(() => {
+    if (selected >= cs.length) setSelected(Math.max(0, cs.length - 1));
+  }, [cs.length, selected]);
+  useEffect(() => {
+    audio.configure(settings.volume, settings.muted);
+  }, [settings]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (document.hidden) return;
+      if (settings.music && playing && !settings.reduce) audio.note([0, 2, 3, 5][Math.floor(Date.now() / 2400) % 4], 1.2, 0, true);
+    }, 2400);
+    return () => clearInterval(t);
+  }, [settings, playing]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (!isStudio && dirty && value < 70 && Date.now() - lastActivity.current > 90000) {
+        setMessage("ひとつだけ変えてみよう。ヒントで、見る場所を教えるよ。");
+        lastActivity.current = Date.now();
+      }
+    }, 5000);
+    return () => clearInterval(t);
+  }, [isStudio, dirty, value]);
+  useEffect(() => {
+    if (!ready || isStudio || !dirty) return;
+    if (value > lastBest.current + 1) {
+      lastBest.current = value;
+      lastActivity.current = Date.now();
+    }
+    if (star > 0) {
+      setProgress((p) => {
+        const old = p[stageId] || {};
+        const budget = stage.type === "budget" && cs.filter((c) => c.radius > 0).length <= (stage as any).budgetGoal;
+        if ((!budget || old.budgetCleared) && (old.bestScore || 0) >= value && (hintCount > 0 || (old.soloScore || 0) >= value)) return p;
+        return {
+          ...p,
+          [stageId]: {
+            ...old,
+            budgetCleared: old.budgetCleared || budget,
+            bestScore: Math.max(old.bestScore || 0, value),
+            stars: Math.max(old.stars || 0, star),
+            cleared: true,
+            soloScore: hintCount === 0 ? Math.max(old.soloScore || 0, value) : old.soloScore || 0,
+            usedHint: old.usedHint || hintCount > 0,
+          },
+        };
+      });
+      if (star > awarded.current) {
+        awarded.current = star;
+        setCelebrate(true);
+        audio.win();
+        setMessage(star === 3 ? stage.discovery : "クリア！ 次へ進んでも、もっと試してもいいよ。");
+        setTimeout(() => setCelebrate(false), 2200);
+      }
+    }
+  }, [value, ready, isStudio, dirty, hintCount]);
+  function remember() {
+    drafts.current[isStudio ? "studio" : String(stageId)] = {
+      cs: clone(cs),
+      selected,
+      hintCount,
+      dirty,
+      skin,
+      history: clone(history),
+      future: clone(future),
+    };
+  }
+  function choose(id: number, fresh = false) {
+    remember();
+    const prior = fresh ? null : drafts.current[String(id)];
+    audio.unlock();
+    setStageId(id);
+    setMode("quest");
+    setCs(clone(prior?.cs || stages[id - 1].initial));
+    setSelected(prior?.selected ?? Number(Object.keys(stages[id - 1].editable)[0]));
+    setHistory(prior?.history || []);
+    setFuture(prior?.future || []);
+    setHintCount(prior?.hintCount || 0);
+    setDirty(prior?.dirty || false);
+    setDetails(false);
+    setDrawing(false);
+    setGhost(null);
+    setModal("");
+    setShowTarget(true);
+    setMessage(stages[id - 1].mission);
+    setProgress((p) => ({ ...p, [id]: { ...p[id], attempts: (p[id]?.attempts || 0) + 1 } }));
+    awarded.current = 0;
+    lastBest.current = 0;
+    lastActivity.current = Date.now();
+    audio.note(3);
+  }
+  function change(i: number, p: string, v: number, record = true) {
+    audio.unlock();
+    if (!editable[i]?.includes(p) && !(p === "frequency" && editable[i]?.includes("direction"))) return;
+    if (record) {
+      setHistory((h) => [...h.slice(-39), clone(cs)]);
+      setFuture([]);
+      setGhost(clone(cs));
+    }
+    setCs((old) => old.map((c, j) => (j === i ? { ...c, [p]: v } : c)));
+    setDirty(true);
+    audio.note(p === "frequency" ? Math.abs(v) : Math.round(v / 20));
+    const key = i + p;
+    if (repeats.current.key === key) repeats.current.n++;
+    else repeats.current = { key, n: 1 };
+    if (repeats.current.n === 12) setMessage("ゆっくり回すと、ちがいが見えるかも。「ゆっくり」を試してみよう。");
+    else if (p === "frequency") setMessage("速さを変えたら、どこが変わったかな？");
+    else if (p === "phase") setMessage("スタートする角度で、模様はどう変わるかな？");
+  }
+  function undo(redo = false) {
+    const from = redo ? future : history;
+    if (!from.length) return;
+    const next = from.at(-1)!;
+    if (redo) {
+      setFuture(from.slice(0, -1));
+      setHistory((h) => [...h, clone(cs)]);
+    } else {
+      setHistory(from.slice(0, -1));
+      setFuture((f) => [...f, clone(cs)]);
+    }
+    setGhost(clone(cs));
+    setCs(next);
+    setDirty(true);
+    audio.note(1);
+  }
+  function hint() {
+    const n = hintCount + 1;
+    setHintCount(n);
+    let best = { i: 0, p: "radius", delta: 0 };
+    Object.entries(stage.editable).forEach(([i, ps]) =>
+      ps.forEach((p) => {
+        const prop = p === "direction" ? "frequency" : p;
+        let diff = Math.abs((cs[+i] as any)[prop] - (stage.target[+i] as any)[prop]);
+        if (p === "phase") diff = Math.abs(Math.atan2(Math.sin(diff), Math.cos(diff)));
+        diff *= p === "radius" ? 1 : p === "phase" ? 30 : 15;
+        if (diff > best.delta) best = { i: +i, p, delta: diff };
+      }),
+    );
+    setSelected(best.i);
+    const prop = best.p === "direction" ? "frequency" : best.p,
+      wanted = (stage.target[best.i] as any)[prop],
+      current = (cs[best.i] as any)[prop];
+    if (best.p === "direction") {
+      setMessage(
+        n === 1
+          ? `円${best.i + 1}の「回る向き」に注目してみよう。`
+          : `円${best.i + 1}を${wanted > 0 ? "右まわり" : "左まわり"}にして、形を比べてみよう。`,
+      );
+    } else {
+      const dest =
+        best.p === "phase"
+          ? Math.round(((((wanted * 180) / Math.PI) % 360) + 360) % 360) + "°"
+          : best.p === "frequency"
+            ? `${Math.abs(wanted)}倍・${wanted > 0 ? "右まわり" : "左まわり"}`
+            : wanted;
+      setMessage(
+        n === 1
+          ? `円${best.i + 1}の「${(names as any)[best.p]}」に注目してみよう。`
+          : n === 2
+            ? `円${best.i + 1}の${(names as any)[best.p]}を変えて「前と比べる」で見てみよう。`
+            : `円${best.i + 1}の${(names as any)[best.p]}は ${dest}。形の変化を見てみよう！`,
+      );
+    }
+    audio.note(5);
+  }
+  function studio(useCurrent = false) {
+    if (isStudio && !useCurrent) {
+      setModal("");
+      return;
+    }
+    remember();
+    const prior = useCurrent ? null : drafts.current.studio;
+    if (prior) {
+      setCs(clone(prior.cs));
+      setSelected(prior.selected || 0);
+      setSkin(prior.skin || 0);
+    }
+    setMode("studio");
+    setDrawing(false);
+    setShowTarget(false);
+    setModal("");
+    setHistory([]);
+    setFuture([]);
+    setMessage("正解は、きみの「おもしろい！」。好きな模様を発明しよう。");
+    audio.unlock();
+  }
+  function saveArt() {
+    const item = {
+      id: Date.now(),
+      name: artName.trim().slice(0, 30) || `ひかりの発見 ${gallery.length + 1}`,
+      tag: artTag,
+      cs: clone(cs),
+      skin,
+      date: new Date().toLocaleDateString("ja-JP"),
+    };
+    setGallery((g) => [item, ...g].slice(0, 100));
+    setMessage("新しい模様を発見！ 図鑑にしまったよ。");
+    setArtName("");
+    setModal("");
+    audio.win();
+  }
+  const activeCircles = cs.filter((c) => c.radius > 0).length;
+  const budgetGoal = (stage as any).budgetGoal;
+  const all3 = [stageId - 1, stageId - 2, stageId - 3].every((id) => progress[id]?.stars === 3);
+  if (!ready)
+    return (
+      <div className="loading">
+        <img src="./icon.svg" />
+        魔法の準備中…
+      </div>
+    );
+  return (
+    <div className={settings.reduce ? "app reduced" : "app"} onPointerDown={() => audio.unlock()} onKeyDown={() => audio.unlock()}>
+      <header>
+        <a className="brand" href="./" onClick={(e) => e.preventDefault()}>
+          <img src="./icon.svg" />
+          <span>
+            FOURIER <b>QUEST</b>
+            <small>くるくる魔法のパズル王国</small>
+          </span>
+        </a>
+        <nav>
+          <button className={!isStudio ? "active" : ""} onClick={() => setModal("map")}>
+            <Icon name="map" />
+            <span>冒険マップ</span>
+          </button>
+          <button className={isStudio ? "active" : ""} onClick={() => studio()}>
+            <Icon name="spark" />
+            <span>自由にあそぶ</span>
+          </button>
+          <button onClick={() => setModal("gallery")}>
+            <Icon name="book" />
+            <span>発見図鑑</span>
+          </button>
+        </nav>
+        <div className="header-right">
+          <span className="star-total">
+            ★ <b>{total}</b>
+            <small>/120</small>
+          </span>
+          <button className="icon-btn" aria-label="設定" onClick={() => setModal("settings")}>
+            <Icon name="settings" />
+          </button>
+        </div>
+      </header>
+      <main>
+        <div className="intro">
+          <div>
+            <span className="eyebrow">{isStudio ? "YOUR LITTLE UNIVERSE" : `WORLD 0${stage.world} · ${worlds[stage.world - 1]}`}</span>
+            <h1>{isStudio ? "ひらめき、くるくる。" : "円をくるくる。ひらめき、キラキラ。"}</h1>
+            <p>{isStudio ? "円を重ねて、まだ見たことのない模様を。" : "ちょっと変えると、世界が変わる。今日はどんな発見があるかな？"}</p>
+          </div>
+          <div className="daily">
+            <span>✧</span>
+            <div>
+              まちがいも、だいはっけん。<small>きみのペースで、何度でも。</small>
+            </div>
+          </div>
+        </div>
+        <div className="game-grid">
+          <section className="play-area">
+            <div className="stage-bar">
+              <div className="stage-badge">{isStudio ? "∞" : String(stageId).padStart(2, "0")}</div>
+              <div>
+                <small>{isStudio ? "CREATIVE STUDIO" : "TODAY’S QUEST"}</small>
+                <h2>{isStudio ? "きみだけの魔法工房" : stage.title}</h2>
+              </div>
+              <span className="stage-stars" aria-label={`${isStudio ? 0 : star}つ星`}>
+                {[1, 2, 3].map((n) => (
+                  <i key={n} className={!isStudio && star >= n ? "earned" : ""}>
+                    ★
+                  </i>
+                ))}
+              </span>
+            </div>
+            <div className={"universe " + (celebrate && !settings.reduce ? "celebrate" : "")}>
+              <div className="canvas-tag">
+                <span className="live-dot" />
+                {drawing ? "指で、ひと筆描いてみよう" : playing ? "光の実験中" : "じっくり観察中"}
+              </div>
+              <div className="canvas-top-right">
+                <button
+                  aria-label={settings.muted ? "音をオン" : "音をオフ"}
+                  onClick={() => setSettings((s) => ({ ...s, muted: !s.muted }))}
+                >
+                  <Icon name="sound" />
+                  {settings.muted ? "OFF" : "ON"}
+                </button>
+              </div>
+              <Canvas
+                cs={cs}
+                target={stage.target}
+                selected={selected}
+                setSelected={setSelected}
+                change={change}
+                editable={editable}
+                playing={playing}
+                slow={slow}
+                settings={settings}
+                showTarget={!isStudio && showTarget}
+                showCircles={showCircles}
+                showTrace={showTrace}
+                ghost={compare ? ghost : null}
+                drawing={drawing}
+                onDraw={(p) => {
+                  const result = fourier(p, drawCount);
+                  if (result.length) {
+                    setHistory((h) => [...h, clone(cs)]);
+                    setCs(result);
+                    setSelected(0);
+                    setFuture([]);
+                    setDrawing(false);
+                    setMessage(`${drawCount}個の円が、きみの絵を描きはじめたよ！`);
+                    audio.win();
+                  }
+                }}
+                skin={skin}
+                dragProperty={dragProperty}
+              />
+              <div className="canvas-legend">
+                <span>
+                  <i />
+                  きみのひかり
+                </span>
+                {!isStudio && (
+                  <span>
+                    <i className="dashed" />
+                    お手本
+                  </span>
+                )}
+                <span className="drag-label">
+                  {drawing
+                    ? "終点と始点は自動でつながるよ"
+                    : props.includes("radius") || props.includes("phase")
+                      ? "◉ 円のふちを動かそう"
+                      : "↓ 下のボタンで変えよう"}
+                </span>
+              </div>
+              {celebrate && (
+                <div className="celebration">
+                  <span>✦ ✧ ✦</span>
+                  <strong>{star === 3 ? "ぴったり！ 大はっけん！" : "できた！ 魔法がかかった！"}</strong>
+                </div>
+              )}
+            </div>
+            <div className="canvas-controls">
+              <button aria-expanded={details} onClick={() => setDetails(!details)}>
+                {details ? "表示をとじる" : "見え方"}
+              </button>
+              <button className="play-button" onClick={() => setPlaying(!playing)}>
+                <Icon name={playing ? "pause" : "play"} />
+                {playing ? "とめる" : "まわす"}
+              </button>
+              <button className={slow ? "selected" : ""} onClick={() => setSlow(!slow)}>
+                ◷ ゆっくり
+              </button>
+              <span className={details ? "display-options open" : "display-options"}>
+                <div className="control-divider" />
+                <label>
+                  <input type="checkbox" checked={showCircles} onChange={(e) => setShowCircles(e.target.checked)} />円
+                </label>
+                <label>
+                  <input type="checkbox" checked={showTrace} onChange={(e) => setShowTrace(e.target.checked)} />
+                  軌跡
+                </label>
+                {!isStudio && (
+                  <label>
+                    <input type="checkbox" checked={showTarget} onChange={(e) => setShowTarget(e.target.checked)} />
+                    お手本
+                  </label>
+                )}
+                <label>
+                  <input type="checkbox" checked={compare} onChange={(e) => setCompare(e.target.checked)} />
+                  前と比べる
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={settings.traceMode}
+                    onChange={(e) => setSettings((s) => ({ ...s, traceMode: e.target.checked }))}
+                  />
+                  描くところを見る
+                </label>
+              </span>
+            </div>
+            <div className="companion">
+              <Orb happy={celebrate} />
+              <div>
+                <small>魔法の相棒 ルミ</small>
+                <p aria-live="polite">{message}</p>
+              </div>
+            </div>
+          </section>
+          <aside className="workbench">
+            <div className="bench-title">
+              <span className="eyebrow">LET’S EXPERIMENT</span>
+              <h2>
+                魔法をつくろう <Icon name="spark" />
+              </h2>
+              <p>{isStudio ? "「もしも」を、ためしてみよう。" : stage.mission}</p>
+            </div>
+            {isStudio && (
+              <div className="presets">
+                {["花のたね", "星のたね", "ひらめき"].map((n, i) => (
+                  <button
+                    key={n}
+                    onClick={() => {
+                      setHistory((h) => [...h, clone(cs)]);
+                      setFuture([]);
+                      setGhost(clone(cs));
+                      setCs(
+                        i < 2
+                          ? [
+                              { radius: 65, frequency: 1, phase: 0 },
+                              { radius: i === 0 ? 32 : 18, frequency: i === 0 ? -4 : -4, phase: i === 0 ? 0 : Math.PI },
+                            ]
+                          : Array.from({ length: 3 }, (_, j) => ({
+                              radius: j === 0 ? 60 : 15 + Math.floor(Math.random() * 35),
+                              frequency: j === 0 ? 1 : -(2 + Math.floor(Math.random() * 6)),
+                              phase: (Math.floor(Math.random() * 6) * Math.PI) / 3,
+                            })),
+                      );
+                      setSelected(1);
+                      setMessage("この形を、きみならどう変える？");
+                      audio.note(5);
+                    }}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="circle-heading">
+              <b>① 円をえらぶ</b>
+              <span>
+                {cs.length} / {isStudio ? 128 : stage.maxCircles} 個
+              </span>
+            </div>
+            <div className="circle-tabs">
+              {cs.map((c, i) => (
+                <button
+                  key={i}
+                  className={selected === i ? "selected" : ""}
+                  style={{ "--circle-color": colors[i % 8] } as any}
+                  onClick={() => {
+                    setSelected(i);
+                    audio.note(i);
+                  }}
+                  aria-label={`円${i + 1}を選択`}
+                >
+                  <span /> {i + 1}
+                  {!editable[i]?.length && <small>固定</small>}
+                </button>
+              ))}
+            </div>
+            <div className="adjust-heading">
+              <b>② ちょっと変えてみよう</b>
+              <span style={{ color: colors[selected % 8] }}>円 {selected + 1}</span>
+            </div>
+            {props.includes("radius") && props.includes("phase") && (
+              <div className="drag-mode">
+                <span>指で変えるもの</span>
+                <button className={dragProperty === "radius" ? "selected" : ""} onClick={() => setDragProperty("radius")}>
+                  大きさ
+                </button>
+                <button className={dragProperty === "phase" ? "selected" : ""} onClick={() => setDragProperty("phase")}>
+                  角度
+                </button>
+              </div>
+            )}
+            {!props.length && <p className="fixed-note">この円はお手本係。ほかの円をえらぼう。</p>}
+            {(["radius", "frequency", "phase"] as const)
+              .filter((p) => props.includes(p) || (p === "frequency" && props.includes("direction")))
+              .map((p) => {
+                const v =
+                  p === "phase"
+                    ? Math.round(((((circle.phase * 180) / Math.PI) % 360) + 360) % 360)
+                    : p === "frequency"
+                      ? Math.abs(circle.frequency)
+                      : Math.round(circle.radius);
+                return (
+                  <div className="parameter" key={p}>
+                    <div className="parameter-label">
+                      <label htmlFor={p}>
+                        {p === "frequency" && props.includes("direction") && !props.includes("frequency") ? "回る向き" : names[p]}
+                      </label>
+                      <output>
+                        {v}
+                        <small>{p === "phase" ? "°" : p === "frequency" ? "倍" : ""}</small>
+                      </output>
+                    </div>
+                    {!(p === "frequency" && props.includes("direction") && !props.includes("frequency")) && (
+                      <div className="stepper">
+                        <button
+                          aria-label={`${names[p]}を減らす`}
+                          onClick={() =>
+                            change(
+                              selected,
+                              p,
+                              p === "phase"
+                                ? circle.phase - Math.PI / 180
+                                : p === "frequency"
+                                  ? Math.sign(circle.frequency) * Math.max(1, Math.abs(circle.frequency) - 1)
+                                  : Math.max(0, Math.round(circle.radius) - 1),
+                            )
+                          }
+                        >
+                          −
+                        </button>
+                        <input
+                          id={p}
+                          type="range"
+                          min={p === "frequency" ? 1 : 0}
+                          max={p === "radius" ? 160 : p === "frequency" ? Math.max(12, v) : 359}
+                          step="1"
+                          value={v}
+                          onPointerDown={() => {
+                            setHistory((h) => [...h, clone(cs)]);
+                            setFuture([]);
+                            setGhost(clone(cs));
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key.startsWith("Arrow")) {
+                              setHistory((h) => [...h.slice(-39), clone(cs)]);
+                              setFuture([]);
+                              setGhost(clone(cs));
+                            }
+                          }}
+                          onChange={(e) =>
+                            change(
+                              selected,
+                              p,
+                              p === "phase"
+                                ? (+e.target.value * Math.PI) / 180
+                                : p === "frequency"
+                                  ? +e.target.value * Math.sign(circle.frequency)
+                                  : +e.target.value,
+                              false,
+                            )
+                          }
+                        />
+                        <button
+                          aria-label={`${names[p]}を増やす`}
+                          onClick={() =>
+                            change(
+                              selected,
+                              p,
+                              p === "phase"
+                                ? circle.phase + Math.PI / 180
+                                : p === "frequency"
+                                  ? Math.sign(circle.frequency) * Math.min(128, Math.abs(circle.frequency) + 1)
+                                  : Math.min(160, Math.round(circle.radius) + 1),
+                            )
+                          }
+                        >
+                          ＋
+                        </button>
+                      </div>
+                    )}
+                    {p === "frequency" && (isStudio || stageId !== 4) && (
+                      <div className="direction">
+                        <button
+                          className={circle.frequency > 0 ? "selected" : ""}
+                          onClick={() => change(selected, "frequency", Math.abs(circle.frequency))}
+                        >
+                          ↻ 右まわり
+                        </button>
+                        <button
+                          className={circle.frequency < 0 ? "selected" : ""}
+                          onClick={() => change(selected, "frequency", -Math.abs(circle.frequency))}
+                        >
+                          ↺ 左まわり
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            <button
+              className="compare-action"
+              disabled={!ghost}
+              onClick={() => {
+                setCompare(!compare);
+                setDetails(true);
+              }}
+            >
+              {compare ? "比較をとじる" : "前の線と比べる"}
+            </button>
+            <div className="edit-actions">
+              <button disabled={!history.length} onClick={() => undo()}>
+                <Icon name="undo" size={16} />
+                もどす
+              </button>
+              <button disabled={!future.length} onClick={() => undo(true)}>
+                ↪ やり直す
+              </button>
+              <button onClick={() => setModal("reset")}>↺ 最初から</button>
+            </div>
+            {!isStudio ? (
+              <>
+                <>
+                  {stage.type === "budget" && (
+                    <p className="observation">
+                      円 {budgetGoal} 個以下で70%以上に挑戦！ 使用中：{activeCircles}個{" "}
+                      {value >= 70 && activeCircles <= budgetGoal ? "✦ 節約できた！" : ""}
+                    </p>
+                  )}
+                  <div className="score-card">
+                    <div>
+                      <span>
+                        {dirty && star ? (star === 3 ? "ぴったり！" : "クリア！ もっと近づけてもいいね") : "お手本とのぴったり度"}
+                      </span>
+                      <strong>
+                        {value > 99.95 ? 100 : Math.floor(value)}
+                        <small>%</small>
+                      </strong>
+                    </div>
+                    <div className="score-track">
+                      <i style={{ width: `${value}%` }} />
+                      {[70, 85, 95].map((n) => (
+                        <span key={n} style={{ left: `${n}%` }} />
+                      ))}
+                    </div>
+                    <small>70%でクリア · 85%で★★ · 95%で★★★</small>
+                  </div>
+                </>
+                <div className="bench-actions">
+                  <button className="hint" onClick={hint}>
+                    <Icon name="bulb" />
+                    ヒント{hintCount > 0 && ` ${hintCount}`}
+                  </button>
+                  <button
+                    className="primary"
+                    disabled={!progress[stageId]?.cleared}
+                    onClick={() => (stageId < 40 ? choose(stageId + 1) : studio())}
+                  >
+                    {stageId === 40 ? "自由にあそぶ" : "つぎへ"}
+                    <Icon name="arrow" />
+                  </button>
+                </div>
+                {stageId === 4 && (
+                  <p className="observation">円2は1周の間に {Math.abs(cs[1].frequency)} 回まわるよ。点数が同じでも、線を比べてみよう。</p>
+                )}
+                <p className="gentle-note">ヒントを使っても、星はぜんぶもらえるよ。</p>
+                {all3 && (
+                  <button
+                    className="challenge"
+                    onClick={() => setMessage("追加チャレンジ！ 変える前に形を予想して、1回の操作で近づけられるかな？")}
+                  >
+                    ✧ ひらめきチャレンジ
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="studio-actions">
+                  <button
+                    disabled={cs.length >= 128}
+                    onClick={() => {
+                      setHistory((h) => [...h, clone(cs)]);
+                      setFuture([]);
+                      setCs((c) => [...c, { radius: 15, frequency: -(c.length + 1), phase: 0 }]);
+                      setSelected(cs.length);
+                    }}
+                  >
+                    ＋ 円をふやす
+                  </button>
+                  <button
+                    disabled={cs.length <= 1}
+                    onClick={() => {
+                      setHistory((h) => [...h, clone(cs)]);
+                      setFuture([]);
+                      setCs((c) => c.filter((_, i) => i !== selected));
+                      setSelected(0);
+                    }}
+                  >
+                    − 円をへらす
+                  </button>
+                </div>
+                <button className="draw-button" onClick={() => setDrawing(!drawing)}>
+                  <Icon name="pen" />
+                  {drawing ? "お絵かきをやめる" : "描いた絵を、円にする"}
+                </button>
+                <label className="draw-count">
+                  お絵かきの円の数
+                  <select value={drawCount} onChange={(e) => setDrawCount(+e.target.value)}>
+                    {[8, 16, 32, 64, 128].map((n) => (
+                      <option key={n}>{n}</option>
+                    ))}
+                  </select>
+                </label>
+              </>
+            )}
+            <button className="carry-art" onClick={() => studio(true)}>
+              この模様で自由にあそぶ
+            </button>
+            <button className="save-art" onClick={() => setModal("save")}>
+              <Icon name="save" size={17} />
+              この模様を図鑑にしまう
+            </button>
+          </aside>
+        </div>
+        <section className="discovery-strip">
+          <div>
+            <span className="tiny-orbit">✧</span>
+            <div>
+              <b>正解の、その先へ。</b>
+              <p>できた形を変えてみよう。きみだけの発見が待っている。</p>
+            </div>
+          </div>
+          <button onClick={() => studio()}>
+            自由にあそぶ <Icon name="arrow" size={17} />
+          </button>
+        </section>
+        <footer>
+          <span>
+            FOURIER QUEST <i>·</i> 小さな「なぜ？」が、大きな魔法に。
+          </span>
+          <span>
+            {saved === null ? "保存中…" : saved ? "✓ この端末に自動保存" : "保存できませんでした。端末の空き容量を確認してください。"}
+          </span>
+        </footer>
+      </main>
+      {modal && (
+        <div className="overlay" onClick={() => setModal("")}>
+          <section
+            className={"modal " + (modal === "map" ? "wide" : "")}
+            role="dialog"
+            aria-modal="true"
+            aria-label={
+              modal === "map"
+                ? "冒険マップ"
+                : modal === "gallery"
+                  ? "発見図鑑"
+                  : modal === "save"
+                    ? "作品を保存"
+                    : modal === "reset"
+                      ? "最初から"
+                      : "設定"
+            }
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close icon-btn" aria-label="閉じる" onClick={() => setModal("")}>
+              <Icon name="close" />
+            </button>
+            {modal === "map" && (
+              <>
+                <span className="eyebrow">YOUR ADVENTURE</span>
+                <h2>40の「できた！」を見つけよう。</h2>
+                <p>ひとつクリアすると、次の扉がひらくよ。</p>
+                {worlds.map((w, wi) => (
+                  <div className="world" key={w}>
+                    <h3>
+                      <span>0{wi + 1}</span>
+                      {w}
+                    </h3>
+                    <div className="stage-grid">
+                      {stages
+                        .filter((s) => s.world === wi + 1)
+                        .map((s) => {
+                          const unlocked = s.id === 1 || progress[s.id - 1]?.cleared;
+                          return (
+                            <button
+                              key={s.id}
+                              disabled={!unlocked}
+                              className={s.id === stageId ? "current" : ""}
+                              onClick={() => choose(s.id)}
+                            >
+                              <div className="map-thumb">
+                                <Mini cs={s.target} />
+                              </div>
+                              <b>{String(s.id).padStart(2, "0")}</b>
+                              <span>{s.title}</span>
+                              <small>
+                                {unlocked ? "★".repeat(progress[s.id]?.stars || 0) + "☆".repeat(3 - (progress[s.id]?.stars || 0)) : "🔒"}
+                                {progress[s.id]?.soloScore >= 95 ? " 自力！" : ""}
+                                {progress[s.id]?.budgetCleared ? " 節約！" : ""}
+                              </small>
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+            {modal === "gallery" && (
+              <>
+                <span className="eyebrow">DISCOVERY COLLECTION</span>
+                <h2>きみの発見図鑑</h2>
+                <p>模様をえらぶと、もう一度あそべるよ。</p>
+                {!gallery.length ? (
+                  <div className="empty">
+                    <Orb />
+                    <h3>最初の発見は、どんな形？</h3>
+                    <p>好きな模様ができたら「図鑑にしまう」を押してね。</p>
+                  </div>
+                ) : (
+                  <div className="gallery-grid">
+                    {gallery.map((g) => (
+                      <button
+                        key={g.id}
+                        onClick={() => {
+                          studio(true);
+                          setCs(clone(g.cs));
+                          setSelected(0);
+                          setSkin(g.skin || 0);
+                        }}
+                      >
+                        <Mini cs={g.cs} />
+                        <b>{g.name}</b>
+                        <small>
+                          {g.date} · {g.cs.length}個の円
+                        </small>
+                        <small>{g.tag || "自由な発見"}</small>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+            {modal === "settings" && (
+              <>
+                <span className="eyebrow">MAKE YOURSELF COMFORTABLE</span>
+                <h2>あそびやすくしよう</h2>
+                <label className="setting">
+                  <span>音を出す</span>
+                  <input
+                    type="checkbox"
+                    checked={!settings.muted}
+                    onChange={(e) => setSettings((s) => ({ ...s, muted: !e.target.checked }))}
+                  />
+                </label>
+                <label className="setting">
+                  <span>音量</span>
+                  <input
+                    aria-label="音量"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step=".05"
+                    value={settings.volume}
+                    onChange={(e) => setSettings((s) => ({ ...s, volume: +e.target.value }))}
+                  />
+                </label>
+                <label className="setting">
+                  <span>星空のメロディー</span>
+                  <input
+                    type="checkbox"
+                    checked={settings.music}
+                    onChange={(e) => setSettings((s) => ({ ...s, music: e.target.checked }))}
+                  />
+                </label>
+                <label className="setting">
+                  <span>動きをひかえめに</span>
+                  <input
+                    type="checkbox"
+                    checked={settings.reduce}
+                    onChange={(e) => setSettings((s) => ({ ...s, reduce: e.target.checked }))}
+                  />
+                </label>
+                <label className="setting">
+                  <span>光をやわらかく輝かせる</span>
+                  <input type="checkbox" checked={settings.glow} onChange={(e) => setSettings((s) => ({ ...s, glow: e.target.checked }))} />
+                </label>
+                <h3>ひかりの色</h3>
+                <div className="skins">
+                  {["ミント", "すみれ", "夕やけ"].map((n, i) => (
+                    <button key={n} disabled={i > 0 && total < i * 6} className={skin === i ? "selected" : ""} onClick={() => setSkin(i)}>
+                      {n}
+                      {i > 0 && total < i * 6 ? ` ★${i * 6}で解放` : ""}
+                    </button>
+                  ))}
+                </div>
+                <p className="privacy">進み具合と作品は、この端末のブラウザに保存されます。ブラウザのデータを消すと記録も消えます。</p>
+              </>
+            )}
+            {modal === "save" && (
+              <>
+                <h2>この発見に名前をつけよう</h2>
+                <label className="art-field">
+                  作品の名前
+                  <input
+                    maxLength={30}
+                    value={artName}
+                    placeholder={`ひかりの発見 ${gallery.length + 1}`}
+                    onChange={(e) => setArtName(e.target.value)}
+                  />
+                </label>
+                <label className="art-field">
+                  何を試した？
+                  <select value={artTag} onChange={(e) => setArtTag(e.target.value)}>
+                    {["大きさを変えた", "速さを変えた", "回る向きを変えた", "角度を変えた", "円を組み合わせた", "絵から作った"].map((t) => (
+                      <option key={t}>{t}</option>
+                    ))}
+                  </select>
+                </label>
+                <p>図鑑から開いても元の作品は残るよ。続きを変えて、別の作品も作ろう！</p>
+                <button className="primary" onClick={saveArt}>
+                  図鑑に保存
+                </button>
+              </>
+            )}
+            {modal === "reset" && (
+              <>
+                <h2>最初の形にもどす？</h2>
+                <p>今の調整をリセットします。集めた星と図鑑は残るよ。</p>
+                <div className="dialog-actions">
+                  <button onClick={() => setModal("")}>まだあそぶ</button>
+                  <button
+                    className="primary"
+                    onClick={() => {
+                      if (isStudio) {
+                        setHistory((h) => [...h, clone(cs)]);
+                        setFuture([]);
+                        setCs([
+                          { radius: 70, frequency: 1, phase: 0 },
+                          { radius: 35, frequency: -3, phase: 0 },
+                        ]);
+                        setSelected(0);
+                        setModal("");
+                      } else choose(stageId, true);
+                    }}
+                  >
+                    もどす
+                  </button>
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+      )}
+    </div>
+  );
+}
+createRoot(document.getElementById("root")!).render(<App />);
