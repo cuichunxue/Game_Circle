@@ -1,4 +1,4 @@
-FOURIER QUEST — 修正版 1.1
+FOURIER QUEST — 1.2
 
 【PCで遊ぶ】
 ZIPを展開して、一番上の index.html をブラウザで開きます。
@@ -18,9 +18,15 @@ source/ : React / TypeScriptの編集用ソースとテスト
 
 【編集】
 sourceフォルダで npm ci、npm run build を実行します。
-node tests.mjs / node integration-tests.mjs / node journey-tests.mjs / node canvas-tests.mjs でテストできます。
+npm test ですべてのテストを実行できます。npm run release で web/ と index.html を作り直します。
 
-【修正内容】
+【1.2 の主な変更】
+40ステージをすべて別の謎に作り直し（ワールド3・4は「まちがいさがし」）、
+クリアカードと紙ふぶき、あったか・つめたい表示、カチッと吸いつく操作、
+シール帳（12種）、ひかりの色6色、マップのNEW表示、最初の操作ガイド。
+検討内容は docs/journey-map.md（リポジトリ）にあります。
+
+【1.1 の修正内容】
 スマホの操作・観察レイアウト、ST4・5、途中保存、選択円の復元、
 描画過程の表示、図鑑の作品名と発見タグ、動きの軽減、タッチ判定を改善。
 
@@ -28,5 +34,5 @@ node tests.mjs / node integration-tests.mjs / node journey-tests.mjs / node canv
 進行と作品は使用中のブラウザ内に保存されます。
 サイト版とダウンロード版の記録は自動では共有されません。
 ブラウザデータを消すと記録も消えます。
-全40ステージの100点解・基本操作・追加の回帰テストを確認済み。
+全40ステージの100点解・基本操作・追加の回帰テストを確認済み（1.2で再確認）。
 iPhone実機、実際の音の聞こえ方、子どもの試遊は未検証です。

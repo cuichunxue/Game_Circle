@@ -9,6 +9,33 @@ const stages = stagesData as Stage[],
   worlds = ["円の魔法学校", "花びらの森", "星空の研究所", "フーリエ城"],
   colors = ["#9c89ff", "#67e9c8", "#ffbf76", "#ff85b6", "#8bcaff", "#e5dc84", "#c0a2fb", "#96e393"];
 const names = { radius: "大きさ", frequency: "速さ", phase: "スタート角度", direction: "回る向き" };
+const skins = [
+  { name: "ミント", ink: "#9effe0", stars: 0 },
+  { name: "すみれ", ink: "#edb5ff", stars: 6 },
+  { name: "夕やけ", ink: "#ffc790", stars: 12 },
+  { name: "さくら", ink: "#ffb3d6", stars: 24 },
+  { name: "金色", ink: "#ffe27a", stars: 45 },
+  { name: "にじ", ink: "rainbow", stars: 80 },
+];
+const inkColor = (skin: number, now = 0) => {
+  const ink = (skins[skin] || skins[0]).ink;
+  return ink === "rainbow" ? `hsl(${Math.round(now / 12) % 360} 95% 74%)` : ink;
+};
+type BadgeContext = { total: number; cleared: number; worlds: boolean[]; solo: boolean; budget: boolean; art: number };
+const badges: { id: string; icon: string; name: string; desc: string; test: (c: BadgeContext) => boolean }[] = [
+  { id: "first", icon: "🌱", name: "はじめの一歩", desc: "はじめてクリア", test: (c) => c.cleared >= 1 },
+  { id: "w1", icon: "🏫", name: "魔法学校 卒業", desc: "ワールド1をぜんぶクリア", test: (c) => c.worlds[0] },
+  { id: "w2", icon: "🌸", name: "森の研究者", desc: "ワールド2をぜんぶクリア", test: (c) => c.worlds[1] },
+  { id: "w3", icon: "🔭", name: "星空の名探偵", desc: "ワールド3をぜんぶクリア", test: (c) => c.worlds[2] },
+  { id: "w4", icon: "🏰", name: "フーリエ城の主", desc: "ワールド4をぜんぶクリア", test: (c) => c.worlds[3] },
+  { id: "solo", icon: "💡", name: "じぶんの力で", desc: "ヒントなしで★★★", test: (c) => c.solo },
+  { id: "budget", icon: "🪙", name: "節約名人", desc: "節約チャレンジに成功", test: (c) => c.budget },
+  { id: "star30", icon: "⭐", name: "星あつめ", desc: "★を30こ集める", test: (c) => c.total >= 30 },
+  { id: "star60", icon: "🌠", name: "流れ星ハンター", desc: "★を60こ集める", test: (c) => c.total >= 60 },
+  { id: "star120", icon: "👑", name: "星の王さま", desc: "★を120こぜんぶ集める", test: (c) => c.total >= 120 },
+  { id: "art", icon: "🎨", name: "はじめての作品", desc: "図鑑に模様をしまう", test: (c) => c.art >= 1 },
+  { id: "collector", icon: "📚", name: "コレクター", desc: "図鑑に10こしまう", test: (c) => c.art >= 10 },
+];
 const initialSettings = { volume: 0.35, muted: false, music: false, reduce: false, glow: true, traceMode: false };
 function Icon({ name, size = 20 }: { name: string; size?: number }) {
   const paths: Record<string, React.ReactNode> = {
@@ -131,6 +158,9 @@ function Canvas({
   onDraw,
   skin,
   dragProperty,
+  coach,
+  burst,
+  snap,
 }: {
   cs: Circle[];
   target: Circle[];
@@ -149,14 +179,36 @@ function Canvas({
   onDraw: (p: any[]) => void;
   skin: number;
   dragProperty: string;
+  coach: boolean;
+  burst: number;
+  snap: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null),
     live = useRef<any>({}),
     clock = useRef(0),
     geometry = useRef<any>({}),
     drag = useRef<any>(null),
-    drawn = useRef<any[]>([]);
-  live.current = { cs, target, selected, playing, slow, settings, showTarget, showCircles, showTrace, ghost, drawing, skin };
+    drawn = useRef<any[]>([]),
+    particles = useRef<{ x: number; y: number; vx: number; vy: number; life: number; color: string; size: number }[]>([]);
+  live.current = { cs, target, selected, playing, slow, settings, showTarget, showCircles, showTrace, ghost, drawing, skin, coach };
+  useEffect(() => {
+    if (!burst || settings.reduce) return;
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    for (let i = 0; i < 90; i++) {
+      const a = Math.random() * TAU,
+        v = 120 + Math.random() * 260;
+      particles.current.push({
+        x: r.width / 2,
+        y: r.height / 2,
+        vx: Math.cos(a) * v,
+        vy: Math.sin(a) * v - 120,
+        life: 1.2 + Math.random() * 0.8,
+        color: colors[i % 8],
+        size: 2 + Math.random() * 3,
+      });
+    }
+  }, [burst]);
   const cache = useRef<any>({});
   useEffect(() => {
     if (!drag.current) clock.current = 0;
@@ -235,7 +287,7 @@ function Canvas({
       };
       if (p.showTarget && !p.drawing) line(cache.current.target, "#c6c1de99", 2, [5, 7]);
       if (cache.current.ghost && !p.drawing) line(cache.current.ghost, "#d8dbff35", 1.5);
-      const ink = ["#9effe0", "#edb5ff", "#ffc790"][p.skin % 3];
+      const ink = inkColor(p.skin, now);
       if (p.showTrace && !p.drawing) {
         if (p.settings.traceMode) {
           const n = Math.floor(((t % TAU) / TAU) * 512);
@@ -272,7 +324,7 @@ function Canvas({
           if (i === p.selected) {
             ctx.fillStyle = colors[i % 8];
             ctx.beginPath();
-            ctx.arc(nx * scale, ny * scale, 7, 0, TAU);
+            ctx.arc(nx * scale, ny * scale, 9, 0, TAU);
             ctx.fill();
             ctx.strokeStyle = "#fff";
             ctx.lineWidth = 2;
@@ -281,6 +333,23 @@ function Canvas({
         }
         x = nx;
         y = ny;
+      }
+      const handle = geometry.current.centers[p.selected]?.end;
+      if (p.coach && handle && p.showCircles && !p.drawing) {
+        // Pulsing ring and label on the grab point so the first move is obvious.
+        const pulse = p.settings.reduce ? 0.5 : (Math.sin(now / 260) + 1) / 2,
+          hx = handle.x * scale,
+          hy = handle.y * scale;
+        ctx.strokeStyle = `rgba(255,236,160,${0.45 + pulse * 0.5})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(hx, hy, 16 + pulse * 9, 0, TAU);
+        ctx.stroke();
+        ctx.font = "bold 13px ui-rounded, 'Hiragino Maru Gothic ProN', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ffeeb0";
+        const ly = hy > h / 2 - 60 ? hy - 36 : hy + 46;
+        ctx.fillText("ここを ひっぱってね", Math.max(-w / 2 + 70, Math.min(w / 2 - 70, hx)), ly);
       }
       if (!p.drawing) {
         ctx.shadowColor = ink;
@@ -299,6 +368,18 @@ function Canvas({
         line(drawn.current, ink, 3, [], 5);
       }
       ctx.restore();
+      if (particles.current.length) {
+        particles.current = particles.current.filter((q) => (q.life -= dt) > 0);
+        for (const q of particles.current) {
+          q.vy += 420 * dt;
+          q.x += q.vx * dt;
+          q.y += q.vy * dt;
+          ctx.globalAlpha = Math.min(1, q.life);
+          ctx.fillStyle = q.color;
+          ctx.fillRect(q.x - q.size / 2, q.y - q.size / 2, q.size, q.size * 1.6);
+        }
+        ctx.globalAlpha = 1;
+      }
       raf = requestAnimationFrame(render);
     };
     raf = requestAnimationFrame(render);
@@ -330,7 +411,7 @@ function Canvas({
         const g = geometry.current;
         const edge = Math.abs(Math.hypot(p.x - center.x, p.y - center.y) - cs[selected].radius) * g.scale;
         const handle = Math.hypot(p.x - center.end.x, p.y - center.end.y) * g.scale;
-        if (edge > 24 && handle > 24) return;
+        if (edge > 32 && handle > 32) return;
         drag.current = {
           extent: g.extent,
           center,
@@ -347,10 +428,22 @@ function Canvas({
           drawn.current.push(p);
           return;
         }
-        const v =
+        let v =
           d.property === "radius"
             ? Math.max(0, Math.min(160, Math.round(Math.hypot(p.x - d.center.x, p.y - d.center.y))))
             : Math.atan2(p.y - d.center.y, p.x - d.center.x) - cs[selected].frequency * clock.current;
+        // Gentle magnet near the answer while dragging: small fingers can still feel the "click" of a perfect fit.
+        const goal = snap ? target[selected] : undefined;
+        let snapped = false;
+        if (goal && d.property === "radius" && Math.abs(v - goal.radius) <= 2) (v = goal.radius), (snapped = true);
+        if (
+          goal &&
+          d.property === "phase" &&
+          Math.abs(Math.atan2(Math.sin(v - goal.phase), Math.cos(v - goal.phase))) <= (6 * Math.PI) / 180
+        )
+          (v = goal.phase), (snapped = true);
+        if (snapped && !d.snapped) audio.note(7, 0.12);
+        d.snapped = snapped;
         change(selected, d.property, v, d.first);
         d.first = false;
       }}
@@ -394,14 +487,24 @@ function App() {
     [saved, setSaved] = useState<boolean | null>(true),
     [details, setDetails] = useState(false),
     [artName, setArtName] = useState(""),
-    [artTag, setArtTag] = useState("大きさを変えた");
+    [artTag, setArtTag] = useState("大きさを変えた"),
+    [result, setResult] = useState<null | { stars: number; world: boolean }>(null),
+    [burst, setBurst] = useState(0),
+    [warmth, setWarmth] = useState<"" | "warm" | "cold">(""),
+    [seenBadges, setSeenBadges] = useState<string[] | null>(null),
+    [toast, setToast] = useState("");
   const drafts = useRef<Record<string, any>>({}),
     saveSnapshot = useRef<any>(null);
   const lastActivity = useRef(Date.now()),
     lastBest = useRef(0),
     repeats = useRef({ key: "", n: 0 }),
     awarded = useRef(0),
-    loaded = useRef(false);
+    loaded = useRef(false),
+    previousValue = useRef(0),
+    nearShown = useRef(false),
+    warmTimer = useRef<any>(0),
+    pressing = useRef(false),
+    pendingResult = useRef<null | { stars: number; world: boolean }>(null);
   const stage = stages[stageId - 1],
     isStudio = mode === "studio",
     value = isStudio ? 0 : score(cs, stage),
@@ -410,6 +513,17 @@ function App() {
     editable = isStudio ? Object.fromEntries(cs.map((_, i) => [i, ["radius", "frequency", "phase", "direction"]])) : stage.editable,
     circle = cs[selected] || cs[0],
     props = editable[selected] || [];
+  const progressList = Object.values(progress) as any[],
+    badgeContext: BadgeContext = {
+      total,
+      cleared: progressList.filter((p) => p.cleared).length,
+      worlds: [1, 2, 3, 4].map((w) => stages.filter((s) => s.world === w).every((s) => progress[s.id]?.cleared)),
+      solo: progressList.some((p) => p.soloScore >= 95),
+      budget: progressList.some((p) => p.budgetCleared),
+      art: gallery.length,
+    },
+    earnedBadges = badges.filter((b) => b.test(badgeContext)).map((b) => b.id),
+    nextStage = stages.find((s) => !progress[s.id]?.cleared && (s.id === 1 || progress[s.id - 1]?.cleared))?.id;
   useEffect(() => {
     readSave().then((d) => {
       if (d) {
@@ -423,6 +537,7 @@ function App() {
         setHintCount(d.hintCount || 0);
         setDirty(!!d.dirty);
         setSkin(d.skin || 0);
+        setSeenBadges(d.seenBadges || null);
         drafts.current = d.drafts || {};
         setSelected(d.selected ?? Number(Object.keys(stages[id - 1].editable)[0]));
         setMessage("おかえり！ 前のつづきから、また試してみよう。");
@@ -436,15 +551,52 @@ function App() {
     if (!ready) return;
     setSaved(null);
     const t = setTimeout(() => {
-      writeSave({ progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, drafts: drafts.current }).then(
-        setSaved,
-      );
+      writeSave({
+        progress,
+        gallery,
+        settings,
+        stageId,
+        cs,
+        mode,
+        hintCount,
+        dirty,
+        skin,
+        selected,
+        seenBadges,
+        drafts: drafts.current,
+      }).then(setSaved);
     }, 150);
     return () => clearTimeout(t);
-  }, [progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, ready]);
+  }, [progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, seenBadges, ready]);
   saveSnapshot.current = ready
-    ? { progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, drafts: drafts.current }
+    ? { progress, gallery, settings, stageId, cs, mode, hintCount, dirty, skin, selected, seenBadges, drafts: drafts.current }
     : null;
+  useEffect(() => {
+    if (!ready) return;
+    // Older saves have no sticker record: count what they already earned as seen, without a flood of toasts.
+    if (seenBadges === null) return setSeenBadges(earnedBadges);
+    const fresh = earnedBadges.filter((id) => !seenBadges.includes(id));
+    if (!fresh.length) return;
+    setSeenBadges([...seenBadges, ...fresh]);
+    const b = badges.find((x) => x.id === fresh[0])!;
+    setToast(`${b.icon} シールをゲット！「${b.name}」${fresh.length > 1 ? ` ほか${fresh.length - 1}まい` : ""}`);
+    audio.note(6, 0.4, 0.5);
+    const t = setTimeout(() => setToast(""), 3200);
+    return () => clearTimeout(t);
+  }, [ready, earnedBadges.join(), seenBadges]);
+  useEffect(() => {
+    // "Warmer / colder": every change tells whether the shape got closer to the model.
+    const before = previousValue.current;
+    previousValue.current = value;
+    if (!ready || isStudio || !dirty || Math.abs(value - before) < 0.5) return;
+    setWarmth(value > before ? "warm" : "cold");
+    clearTimeout(warmTimer.current);
+    warmTimer.current = setTimeout(() => setWarmth(""), 900);
+    if (value >= 60 && value < 70 && !nearShown.current) {
+      nearShown.current = true;
+      setMessage("おしい！ あと少しでクリアだよ。");
+    }
+  }, [value]);
   useEffect(() => {
     const flush = () => {
       if (saveSnapshot.current) void writeSave(saveSnapshot.current);
@@ -537,8 +689,13 @@ function App() {
       if (star > awarded.current) {
         awarded.current = star;
         setCelebrate(true);
+        setBurst((b) => b + 1);
+        // Never cover the canvas under a dragging finger: the card waits for the finger to lift.
+        const card = { stars: star, world: stageId % 10 === 0 && !(progress[stageId]?.cleared || result?.world) };
+        if (pressing.current) pendingResult.current = card;
+        else setResult(card);
         audio.win();
-        setMessage(star === 3 ? stage.discovery : "クリア！ 次へ進んでも、もっと試してもいいよ。");
+        setMessage(star === 3 ? stage.discovery : "クリア！ 次へ進んでも、もっと★をねらってもいいよ。");
         setTimeout(() => setCelebrate(false), 2200);
       }
     }
@@ -575,6 +732,9 @@ function App() {
     setProgress((p) => ({ ...p, [id]: { ...p[id], attempts: (p[id]?.attempts || 0) + 1 } }));
     awarded.current = 0;
     lastBest.current = 0;
+    nearShown.current = false;
+    pendingResult.current = null;
+    setResult(null);
     lastActivity.current = Date.now();
     audio.note(3);
   }
@@ -588,7 +748,9 @@ function App() {
     }
     setCs((old) => old.map((c, j) => (j === i ? { ...c, [p]: v } : c)));
     setDirty(true);
-    audio.note(p === "frequency" ? Math.abs(v) : Math.round(v / 20));
+    // In quests the pitch rises as the shape gets closer to the model; in the studio it follows the value.
+    const next = cs.map((c, j) => (j === i ? { ...c, [p]: v } : c));
+    audio.note(isStudio ? (p === "frequency" ? Math.abs(v) : Math.round(v / 20)) : Math.round(score(next, stage) / 14));
     const key = i + p;
     if (repeats.current.key === key) repeats.current.n++;
     else repeats.current = { key, n: 1 };
@@ -665,6 +827,7 @@ function App() {
       setSkin(prior.skin || 0);
     }
     setMode("studio");
+    setResult(null);
     setDrawing(false);
     setShowTarget(false);
     setModal("");
@@ -709,15 +872,15 @@ function App() {
           </span>
         </a>
         <nav>
-          <button className={!isStudio ? "active" : ""} onClick={() => setModal("map")}>
+          <button className={!isStudio ? "active" : ""} aria-label="冒険マップ" onClick={() => setModal("map")}>
             <Icon name="map" />
             <span>冒険マップ</span>
           </button>
-          <button className={isStudio ? "active" : ""} onClick={() => studio()}>
+          <button className={isStudio ? "active" : ""} aria-label="自由にあそぶ" onClick={() => studio()}>
             <Icon name="spark" />
             <span>自由にあそぶ</span>
           </button>
-          <button onClick={() => setModal("gallery")}>
+          <button aria-label="発見図鑑" onClick={() => setModal("gallery")}>
             <Icon name="book" />
             <span>発見図鑑</span>
           </button>
@@ -762,7 +925,15 @@ function App() {
                 ))}
               </span>
             </div>
-            <div className={"universe " + (celebrate && !settings.reduce ? "celebrate" : "")}>
+            <div
+              className={"universe " + (celebrate && !settings.reduce ? "celebrate" : "")}
+              onPointerDown={() => (pressing.current = true)}
+              onPointerUp={() => {
+                pressing.current = false;
+                if (pendingResult.current) setResult(pendingResult.current), (pendingResult.current = null);
+              }}
+              onPointerCancel={() => (pressing.current = false)}
+            >
               <div className="canvas-tag">
                 <span className="live-dot" />
                 {drawing ? "指で、ひと筆描いてみよう" : playing ? "光の実験中" : "じっくり観察中"}
@@ -805,7 +976,21 @@ function App() {
                 }}
                 skin={skin}
                 dragProperty={dragProperty}
+                coach={!isStudio && stageId <= 3 && !dirty && (props.includes("radius") || props.includes("phase"))}
+                burst={burst}
+                snap={!isStudio}
               />
+              {!isStudio && !drawing && (
+                <div className={"live-score " + warmth} aria-hidden="true">
+                  {warmth === "warm" ? "🔥 あったかい！" : warmth === "cold" ? "❄ つめたい…" : "ぴったり度"}
+                  <b>{value > 99.95 ? 100 : Math.floor(value)}%</b>
+                </div>
+              )}
+              {toast && (
+                <div className="badge-toast" role="status">
+                  {toast}
+                </div>
+              )}
               <div className="canvas-legend">
                 <span>
                   <i />
@@ -825,10 +1010,42 @@ function App() {
                       : "↓ 下のボタンで変えよう"}
                 </span>
               </div>
-              {celebrate && (
+              {celebrate && !result && (
                 <div className="celebration">
                   <span>✦ ✧ ✦</span>
                   <strong>{star === 3 ? "ぴったり！ 大はっけん！" : "できた！ 魔法がかかった！"}</strong>
+                </div>
+              )}
+              {result && !isStudio && (
+                <div className={"result-card" + (result.stars < 3 && !result.world ? " compact" : "")} role="status">
+                  <div className="result-stars" aria-label={`${result.stars}つ星`}>
+                    {[1, 2, 3].map((n) => (
+                      <i key={n} className={result.stars >= n ? "earned" : ""} style={{ animationDelay: `${n * 0.18}s` }}>
+                        ★
+                      </i>
+                    ))}
+                  </div>
+                  <strong>
+                    {result.world
+                      ? `ワールド${stage.world} クリア！`
+                      : result.stars === 3
+                        ? "ぴったり！ 大はっけん！"
+                        : "クリア！ 魔法がかかった！"}
+                  </strong>
+                  <p>
+                    {result.world && stageId < 40
+                      ? `つぎは「${worlds[stage.world]}」へ！`
+                      : result.stars === 3
+                        ? stage.discovery
+                        : `あと${result.stars === 1 ? 85 - Math.floor(value) : 95 - Math.floor(value)}%で、つぎの★！`}
+                  </p>
+                  <div>
+                    <button onClick={() => setResult(null)}>{result.stars < 3 ? "★をねらう" : "ここであそぶ"}</button>
+                    <button className="primary" onClick={() => (stageId < 40 ? choose(stageId + 1) : studio())}>
+                      {stageId < 40 ? "つぎへ" : "自由にあそぶ"}
+                      <Icon name="arrow" size={17} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -887,6 +1104,9 @@ function App() {
                 魔法をつくろう <Icon name="spark" />
               </h2>
               <p>{isStudio ? "「もしも」を、ためしてみよう。" : stage.mission}</p>
+              {!isStudio && (stage as any).mistakes > 0 && (
+                <span className="mistake-chip">🔍 ずれている円：{(stage as any).mistakes}こ</span>
+              )}
             </div>
             {isStudio && (
               <div className="presets">
@@ -1252,13 +1472,16 @@ function App() {
                             <button
                               key={s.id}
                               disabled={!unlocked}
-                              className={s.id === stageId ? "current" : ""}
+                              className={(s.id === stageId ? "current " : "") + (s.id === nextStage ? "next" : "")}
                               onClick={() => choose(s.id)}
                             >
                               <div className="map-thumb">
                                 <Mini cs={s.target} />
                               </div>
-                              <b>{String(s.id).padStart(2, "0")}</b>
+                              <b>
+                                {String(s.id).padStart(2, "0")}
+                                {s.id === nextStage && <em className="new-tag">NEW</em>}
+                              </b>
                               <span>{s.title}</span>
                               <small>
                                 {unlocked ? "★".repeat(progress[s.id]?.stars || 0) + "☆".repeat(3 - (progress[s.id]?.stars || 0)) : "🔒"}
@@ -1277,6 +1500,25 @@ function App() {
               <>
                 <span className="eyebrow">DISCOVERY COLLECTION</span>
                 <h2>きみの発見図鑑</h2>
+                <h3 className="sticker-title">
+                  シール帳{" "}
+                  <small>
+                    {earnedBadges.length} / {badges.length}
+                  </small>
+                </h3>
+                <div className="sticker-grid">
+                  {badges.map((b) => {
+                    const got = earnedBadges.includes(b.id);
+                    return (
+                      <div key={b.id} className={got ? "sticker got" : "sticker"} title={b.desc}>
+                        <span aria-hidden="true">{got ? b.icon : "？"}</span>
+                        <b>{got ? b.name : "？？？"}</b>
+                        <small>{b.desc}</small>
+                      </div>
+                    );
+                  })}
+                </div>
+                <h3 className="sticker-title">きみの模様</h3>
                 <p>模様をえらぶと、もう一度あそべるよ。</p>
                 {!gallery.length ? (
                   <div className="empty">
@@ -1354,10 +1596,16 @@ function App() {
                 </label>
                 <h3>ひかりの色</h3>
                 <div className="skins">
-                  {["ミント", "すみれ", "夕やけ"].map((n, i) => (
-                    <button key={n} disabled={i > 0 && total < i * 6} className={skin === i ? "selected" : ""} onClick={() => setSkin(i)}>
-                      {n}
-                      {i > 0 && total < i * 6 ? ` ★${i * 6}で解放` : ""}
+                  {skins.map((k, i) => (
+                    <button key={k.name} disabled={total < k.stars} className={skin === i ? "selected" : ""} onClick={() => setSkin(i)}>
+                      <i
+                        className="skin-dot"
+                        style={{
+                          background: k.ink === "rainbow" ? "linear-gradient(90deg,#ff9bb0,#ffe27a,#9effe0,#9bb8ff,#e4a6ff)" : k.ink,
+                        }}
+                      />
+                      {k.name}
+                      {total < k.stars ? ` ★${k.stars}で解放` : ""}
                     </button>
                   ))}
                 </div>

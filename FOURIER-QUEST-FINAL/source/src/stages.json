@@ -3,7 +3,7 @@
     "id": 1,
     "world": 1,
     "title": "まんまるの魔法",
-    "mission": "円のふちを動かして、お手本に重ねよう。",
+    "mission": "光る点をひっぱって、円を大きくしよう。点線のお手本に重ねてね。",
     "discovery": "円が大きくなると、光の輪も大きくなるね。",
     "target": [
       {
@@ -14,7 +14,7 @@
     ],
     "initial": [
       {
-        "radius": 10,
+        "radius": 25,
         "frequency": 1,
         "phase": 0
       }
@@ -26,14 +26,15 @@
     },
     "maxCircles": 1,
     "D": 60,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 2,
     "world": 1,
     "title": "大きな月、小さな月",
-    "mission": "円のふちを動かして、お手本に重ねよう。",
-    "discovery": "円が大きくなると、光の輪も大きくなるね。",
+    "mission": "こんどは大きすぎる！ 小さくして、お手本の月に重ねよう。",
+    "discovery": "大きくも小さくもできる。円の「大きさ」を使いこなせたね。",
     "target": [
       {
         "radius": 40,
@@ -43,7 +44,7 @@
     ],
     "initial": [
       {
-        "radius": 120,
+        "radius": 100,
         "frequency": 1,
         "phase": 0
       }
@@ -54,14 +55,15 @@
       ]
     },
     "maxCircles": 1,
-    "D": 32,
-    "type": "shape"
+    "D": 72,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 3,
     "world": 1,
     "title": "ふしぎな花",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
+    "mission": "円が2つになったよ。2番目の円の大きさを変えると、花が咲くかな？",
     "discovery": "小さな円も、模様の形を変えているんだ。",
     "target": [
       {
@@ -94,14 +96,15 @@
     },
     "maxCircles": 2,
     "D": 132.8834075421006,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 4,
     "world": 1,
     "title": "花びらのひみつ",
-    "mission": "速さを変えると、花びらはどう変わる？",
-    "discovery": "回る速さを変えると、模様のくり返し方が変わるね。",
+    "mission": "速さを変えると、花びらはどう変わる？ お手本の花びらは何まいかな。",
+    "discovery": "回る速さを変えると、花びらの数が変わるね。",
     "target": [
       {
         "radius": 60,
@@ -133,14 +136,15 @@
     },
     "maxCircles": 2,
     "D": 129.79984591670362,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 5,
     "world": 1,
     "title": "逆回転の魔法",
     "mission": "回る向きを、反対にしてみよう。",
-    "discovery": "反対向きに回すと、描く形も変わるんだ。",
+    "discovery": "反対向きに回すと、描く形もがらっと変わるんだ。",
     "target": [
       {
         "radius": 55,
@@ -172,14 +176,15 @@
     },
     "maxCircles": 2,
     "D": 127.91403363196704,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 6,
     "world": 1,
     "title": "ハートのたね",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "大きすぎる円が2つあるよ。ちょうどよくすると、ハートがあらわれる！",
+    "discovery": "円の大きさのバランスで、ハートだって描けるんだね。",
     "target": [
       {
         "radius": 60,
@@ -227,53 +232,55 @@
     },
     "maxCircles": 3,
     "D": 120.96214283816238,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 7,
     "world": 1,
     "title": "くるりと模様を回そう",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "形は同じなのに、向きがちがう！ 「スタート角度」で花をくるりと回そう。",
+    "discovery": "スタート角度を変えると、模様がくるりと回るね。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 1.5707963267948966
+        "phase": 0
       },
       {
         "radius": 24,
         "frequency": -3,
-        "phase": 0
+        "phase": 1.5707963267948966
       }
     ],
     "initial": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 4.71238898038469
+        "phase": 0
       },
       {
         "radius": 24,
         "frequency": -3,
-        "phase": 0
+        "phase": 4.71238898038469
       }
     ],
     "editable": {
-      "0": [
+      "1": [
         "phase"
       ]
     },
     "maxCircles": 2,
     "D": 108.01499895847799,
-    "type": "shape"
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 8,
     "world": 1,
     "title": "星のひみつ",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "お手本の星のとがりは5つ。速さを変えて、とがりの数をそろえよう。",
+    "discovery": "反対向きに4倍速だと、とがりは5つ。速さ＋1が、とがりの数だ！",
     "target": [
       {
         "radius": 55,
@@ -281,65 +288,71 @@
         "phase": 0
       },
       {
-        "radius": 24,
+        "radius": 35,
         "frequency": -4,
-        "phase": 0.5235987755982988
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 35,
+        "frequency": -2,
+        "phase": 0
       }
     ],
     "editable": {
-      "0": [
-        "radius",
-        "frequency"
-      ],
       "1": [
-        "radius",
         "frequency"
       ]
     },
     "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "D": 117.34564329364767,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 9,
     "world": 1,
     "title": "円を節約しよう",
-    "mission": "大きさ0の円を必要な分だけ使って、模様を作ろう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "大きさ0の円に光をともそう。少ない円で作れたら「節約！」",
+    "discovery": "小さな円がなくても、だいたいの形はできる。大事な円を見つけたね。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
         "radius": 24,
-        "frequency": -5,
-        "phase": 1.0471975511965976
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "initial": [
       {
         "radius": 0,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
         "radius": 0,
-        "frequency": -5,
-        "phase": 1.0471975511965976
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "editable": {
@@ -348,41 +361,44 @@
       ],
       "1": [
         "radius"
+      ],
+      "2": [
+        "radius"
       ]
     },
-    "maxCircles": 2,
-    "D": 108.01499895847799,
+    "maxCircles": 3,
+    "D": 108.55358123986514,
     "type": "budget",
-    "budgetGoal": 1
+    "budgetGoal": 2
   },
   {
     "id": 10,
     "world": 1,
     "title": "魔法学校の卒業試験",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "卒業試験！ 2番目の円は、大きさも速さもちがうみたい。",
+    "discovery": "大きさと速さ、2つを組み合わせて形を作れた。卒業おめでとう！",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -6,
-        "phase": 1.5707963267948966
+        "radius": 28,
+        "frequency": -3,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -6,
-        "phase": 1.5707963267948966
+        "radius": 70,
+        "frequency": -1,
+        "phase": 0
       }
     ],
     "editable": {
@@ -396,45 +412,41 @@
       ]
     },
     "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "D": 111.0907736943082,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 11,
     "world": 2,
     "title": "三つ葉の入り口",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "葉っぱが多すぎる！ 3まいにするには、速さをどうする？",
+    "discovery": "反対向きの2倍速で、葉っぱは3まい。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 1.5707963267948966
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -7,
+        "radius": 30,
+        "frequency": -2,
         "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
-        "phase": 1.5707963267948966
+        "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -7,
+        "radius": 30,
+        "frequency": -5,
         "phase": 0
       }
     ],
     "editable": {
-      "0": [
-        "radius",
-        "frequency",
-        "phase"
-      ],
       "1": [
         "radius",
         "frequency",
@@ -442,15 +454,16 @@
       ]
     },
     "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "D": 112.76967677527502,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 12,
     "world": 2,
     "title": "四つ葉の願い",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "しあわせの四つ葉を咲かせよう。葉っぱの数を決めているのは、どの円かな？",
+    "discovery": "いちばん大きな円と2番目の円の速さで、葉っぱの数が決まるね。",
     "target": [
       {
         "radius": 55,
@@ -458,39 +471,34 @@
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -8,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -3,
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.0471975511965976
+        "radius": 8,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -8,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -1,
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.0471975511965976
+        "radius": 8,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "editable": {
-      "0": [
-        "radius",
-        "frequency",
-        "phase"
-      ],
       "1": [
         "radius",
         "frequency",
@@ -503,37 +511,38 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 113.68535525739452,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 13,
     "world": 2,
     "title": "五枚の花びら",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "花びらがつぶれちゃった。どの円の、何を変えればいいかな？",
+    "discovery": "小さい円が大きすぎると、花びらが重なってしまうんだ。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -2,
-        "phase": 1.0471975511965976
+        "radius": 30,
+        "frequency": -4,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -2,
-        "phase": 1.0471975511965976
+        "radius": 90,
+        "frequency": -4,
+        "phase": 0
       }
     ],
     "editable": {
@@ -549,93 +558,105 @@
       ]
     },
     "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "D": 112.76967677527502,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 14,
     "world": 2,
     "title": "ひまわりの時計",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "ひまわりの花びらは8まい。今は何まいかな？",
+    "discovery": "速さを上げると、花びらがふえて細くなるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -3,
-        "phase": 1.5707963267948966
+        "radius": 28,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 9,
+        "phase": 1.0471975511965976
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 100,
+        "radius": 28,
         "frequency": -3,
-        "phase": 1.5707963267948966
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 9,
+        "phase": 1.0471975511965976
       }
     ],
     "editable": {
-      "0": [
+      "1": [
         "radius",
         "frequency",
         "phase"
       ],
-      "1": [
+      "2": [
         "radius",
         "frequency",
         "phase"
       ]
     },
-    "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "maxCircles": 3,
+    "D": 104.15142821872392,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 15,
     "world": 2,
     "title": "花のかざぐるま",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "かざぐるまの羽の向きがバラバラ。スタート角度をそろえよう。",
+    "discovery": "スタート角度をずらすと、羽がねじれて回って見えるね。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -4,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 5,
+        "radius": 25,
+        "frequency": -3,
         "phase": 0.5235987755982988
+      },
+      {
+        "radius": 12,
+        "frequency": 5,
+        "phase": 1.0471975511965976
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 100,
-        "frequency": -4,
         "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 25,
+        "frequency": -3,
+        "phase": 3.6651914291880923
+      },
+      {
+        "radius": 12,
         "frequency": 5,
-        "phase": 0.5235987755982988
+        "phase": 4.1887902047863905
       }
     ],
     "editable": {
@@ -656,45 +677,41 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 110.87181787992836,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 16,
     "world": 2,
     "title": "夜に咲く花",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "夜の花は、内側に輪っかがあるよ。回る向きを変えてみよう。",
+    "discovery": "同じ向きに回すと、とがりの代わりに輪っかができるんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -5,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": 4,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -5,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -4,
+        "phase": 0
       }
     ],
     "editable": {
-      "0": [
-        "radius",
-        "frequency",
-        "phase"
-      ],
       "1": [
         "radius",
         "frequency",
@@ -702,93 +719,105 @@
       ]
     },
     "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "D": 104.95713410721541,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 17,
     "world": 2,
     "title": "ふたつのリズム",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "2つの円のリズムが、どちらもずれているよ。",
+    "discovery": "2つの円の速さが合わさって、ふくざつなリズムが生まれるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -6,
-        "phase": 1.0471975511965976
+        "radius": 25,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 20,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -6,
-        "phase": 1.0471975511965976
+        "radius": 25,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 20,
+        "frequency": 3,
+        "phase": 0
       }
     ],
     "editable": {
-      "0": [
+      "1": [
         "radius",
         "frequency",
         "phase"
       ],
-      "1": [
+      "2": [
         "radius",
         "frequency",
         "phase"
       ]
     },
-    "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "maxCircles": 3,
+    "D": 106.86907878334125,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 18,
     "world": 2,
     "title": "ちいさなつぼみ",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "大きさがあべこべ！ どの円が大きすぎて、どの円が小さすぎる？",
+    "discovery": "大きな円が形のわく、小さな円がギザギザの飾りを作っているんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 60,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 24,
-        "frequency": -7,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 8,
         "phase": 0
+      },
+      {
+        "radius": 15,
+        "frequency": -5,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": 7,
+        "phase": 1.5707963267948966
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 30,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -7,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 8,
         "phase": 0
+      },
+      {
+        "radius": 40,
+        "frequency": -5,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": 7,
+        "phase": 1.5707963267948966
       }
     ],
     "editable": {
@@ -809,23 +838,34 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 112.76967677527502,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 19,
     "world": 2,
     "title": "森の花火",
-    "mission": "大きさ0の円を必要な分だけ使って、模様を作ろう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "4つの円に光をともそう。3つだけで作れるかな？",
+    "discovery": "いちばん小さな円は、細かい飾り。なくても花火はあがるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 25,
+        "frequency": -4,
+        "phase": 0
+      },
+      {
+        "radius": 15,
+        "frequency": 6,
         "phase": 1.5707963267948966
       },
       {
-        "radius": 24,
+        "radius": 5,
         "frequency": -8,
         "phase": 0
       }
@@ -834,6 +874,16 @@
       {
         "radius": 0,
         "frequency": 1,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": -4,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 6,
         "phase": 1.5707963267948966
       },
       {
@@ -848,19 +898,25 @@
       ],
       "1": [
         "radius"
+      ],
+      "2": [
+        "radius"
+      ],
+      "3": [
+        "radius"
       ]
     },
-    "maxCircles": 2,
-    "D": 108.01499895847799,
+    "maxCircles": 4,
+    "D": 104.57055034760026,
     "type": "budget",
-    "budgetGoal": 1
+    "budgetGoal": 3
   },
   {
     "id": 20,
     "world": 2,
     "title": "花びらの研究者",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "森の最後の試験！ 花びらの数、向き、飾りの大きさ…3つのちがいを見つけよう。",
+    "discovery": "速さ・角度・大きさ。花の研究者になれたね！",
     "target": [
       {
         "radius": 55,
@@ -868,21 +924,31 @@
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -2,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -4,
+        "phase": 1.0471975511965976
+      },
+      {
+        "radius": 12,
+        "frequency": 6,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
+        "radius": 30,
         "frequency": -2,
-        "phase": 0.5235987755982988
+        "phase": 0
+      },
+      {
+        "radius": 30,
+        "frequency": 6,
+        "phase": 0
       }
     ],
     "editable": {
@@ -895,50 +961,56 @@
         "radius",
         "frequency",
         "phase"
+      ],
+      "2": [
+        "radius",
+        "frequency",
+        "phase"
       ]
     },
-    "maxCircles": 2,
-    "D": 108.01499895847799,
-    "type": "shape"
+    "maxCircles": 3,
+    "D": 114.81968472348285,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 21,
     "world": 3,
     "title": "星のコンパス",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "コンパスの針がふくらんでいる？ まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "一つずつ確かめると、まちがいが見つかるね。名探偵だ！",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 24,
+        "radius": 25,
         "frequency": -3,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 4,
-        "phase": 1.5707963267948966
+        "radius": 15,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 100,
+        "radius": 70,
         "frequency": -3,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 4,
-        "phase": 1.5707963267948966
+        "radius": 15,
+        "frequency": 5,
+        "phase": 0
       }
     ],
     "editable": {
@@ -959,57 +1031,58 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 112.0490963818986,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 22,
     "world": 3,
     "title": "きらめく衛星",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "衛星のとがりが、内側に丸まっているよ。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "速さのずれは、とがりの数でわかるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 24,
-        "frequency": -4,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 5,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -6,
+        "radius": 25,
+        "frequency": -4,
         "phase": 0.5235987755982988
+      },
+      {
+        "radius": 12,
+        "frequency": 6,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -4,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 5,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -6,
+        "radius": 25,
+        "frequency": 4,
         "phase": 0.5235987755982988
+      },
+      {
+        "radius": 12,
+        "frequency": 6,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1035,67 +1108,68 @@
       ]
     },
     "maxCircles": 4,
-    "D": 114.67850714061463,
-    "type": "shape"
+    "D": 103.91785217179962,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 23,
     "world": 3,
     "title": "流れ星のリボン",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "リボンの結び目が、反対を向いているみたい。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "形がねじれていたら、スタート角度をあやしもう。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -5,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 6,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": 2,
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -7,
-        "phase": 1.0471975511965976
+        "radius": 12,
+        "frequency": -3,
+        "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 8,
-        "phase": 1.5707963267948966
+        "radius": 8,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": -6,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 100,
-        "frequency": -5,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 6,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": 2,
+        "phase": 3.141592653589793
       },
       {
-        "radius": 13,
-        "frequency": -7,
-        "phase": 1.0471975511965976
+        "radius": 12,
+        "frequency": -3,
+        "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 8,
-        "phase": 1.5707963267948966
+        "radius": 8,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": -6,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1126,15 +1200,16 @@
       ]
     },
     "maxCircles": 5,
-    "D": 116.37525510176123,
-    "type": "shape"
+    "D": 108.49387079462139,
+    "type": "shape",
+    "mistakes": 1
   },
   {
     "id": 24,
     "world": 3,
     "title": "星雲のかけら",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "星雲が大きすぎるし、どこかのリズムもおかしい。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "一つずつ確かめると、まちがいが見つかるね。名探偵だ！",
     "target": [
       {
         "radius": 55,
@@ -1142,31 +1217,31 @@
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -6,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -2,
+        "phase": 1.5707963267948966
       },
       {
-        "radius": 17,
-        "frequency": 7,
-        "phase": 1.0471975511965976
+        "radius": 14,
+        "frequency": 4,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 100,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -6,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -2,
+        "phase": 1.5707963267948966
       },
       {
-        "radius": 17,
-        "frequency": 7,
-        "phase": 1.0471975511965976
+        "radius": 14,
+        "frequency": -4,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1187,56 +1262,57 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 115.55102768906904,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 25,
     "world": 3,
     "title": "銀河のうずまき",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "うずの数と、飾りの大きさをよく見て。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "速さのずれは、とがりの数でわかるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -7,
+        "radius": 28,
+        "frequency": -5,
+        "phase": 0
+      },
+      {
+        "radius": 14,
+        "frequency": 3,
         "phase": 1.0471975511965976
       },
       {
-        "radius": 17,
-        "frequency": 8,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -2,
+        "radius": 8,
+        "frequency": -7,
         "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -7,
+        "radius": 28,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 40,
+        "frequency": 3,
         "phase": 1.0471975511965976
       },
       {
-        "radius": 17,
-        "frequency": 8,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -2,
+        "radius": 8,
+        "frequency": -7,
         "phase": 0
       }
     ],
@@ -1263,67 +1339,68 @@
       ]
     },
     "maxCircles": 4,
-    "D": 114.67850714061463,
-    "type": "shape"
+    "D": 107.15670767618796,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 26,
     "world": 3,
     "title": "月のレース",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "レースの模様がくずれている。細かいところも見てみよう。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "形がねじれていたら、スタート角度をあやしもう。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 24,
-        "frequency": -8,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 2,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -3,
+        "radius": 22,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 16,
+        "frequency": 4,
         "phase": 0.5235987755982988
       },
       {
-        "radius": 11,
-        "frequency": 4,
-        "phase": 1.0471975511965976
+        "radius": 10,
+        "frequency": -11,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -8,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 2,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -3,
+        "radius": 60,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 16,
+        "frequency": 4,
         "phase": 0.5235987755982988
       },
       {
-        "radius": 11,
-        "frequency": 4,
-        "phase": 1.0471975511965976
+        "radius": 10,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1354,47 +1431,48 @@
       ]
     },
     "maxCircles": 5,
-    "D": 116.37525510176123,
-    "type": "shape"
+    "D": 104.58604113360444,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 27,
     "world": 3,
     "title": "天の川のしずく",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "しずくの向きと太さが、ちょっとちがう。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "一つずつ確かめると、まちがいが見つかるね。名探偵だ！",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -2,
         "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 25,
+        "frequency": 2,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 10,
         "frequency": 3,
-        "phase": 0.5235987755982988
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 100,
-        "frequency": -2,
         "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 25,
+        "frequency": 2,
+        "phase": 4.71238898038469
+      },
+      {
+        "radius": 40,
         "frequency": 3,
-        "phase": 0.5235987755982988
+        "phase": 0
       }
     ],
     "editable": {
@@ -1415,15 +1493,16 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 102.22035022440492,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 28,
     "world": 3,
     "title": "星座をつなごう",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "2つの円の速さが、入れかわっているみたい！ どれとどれかな？",
+    "discovery": "速さのずれは、とがりの数でわかるね。",
     "target": [
       {
         "radius": 55,
@@ -1431,41 +1510,41 @@
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -3,
-        "phase": 0.5235987755982988
+        "radius": 22,
+        "frequency": -4,
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 4,
-        "phase": 1.0471975511965976
+        "radius": 14,
+        "frequency": 6,
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -5,
-        "phase": 1.5707963267948966
+        "radius": 8,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 55,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -3,
-        "phase": 0.5235987755982988
+        "radius": 22,
+        "frequency": -6,
+        "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 14,
         "frequency": 4,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -5,
-        "phase": 1.5707963267948966
+        "radius": 8,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1491,67 +1570,68 @@
       ]
     },
     "maxCircles": 4,
-    "D": 114.67850714061463,
-    "type": "shape"
+    "D": 110.50592744282997,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 29,
     "world": 3,
     "title": "星のオーケストラ",
-    "mission": "大きさ0の円を必要な分だけ使って、模様を作ろう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "5つの楽器（円）に光をともそう。4つだけで演奏できるかな？",
+    "discovery": "大きな円ほど、形への影響が大きいんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 24,
-        "frequency": -4,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 17,
-        "frequency": 5,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -6,
         "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 7,
-        "phase": 0.5235987755982988
+        "radius": 25,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 15,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "initial": [
       {
         "radius": 0,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 0,
-        "frequency": -4,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 0,
-        "frequency": 5,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 0,
-        "frequency": -6,
         "phase": 0
       },
       {
         "radius": 0,
-        "frequency": 7,
-        "phase": 0.5235987755982988
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1572,7 +1652,7 @@
       ]
     },
     "maxCircles": 5,
-    "D": 116.37525510176123,
+    "D": 106.10843510296438,
     "type": "budget",
     "budgetGoal": 4
   },
@@ -1580,40 +1660,40 @@
     "id": 30,
     "world": 3,
     "title": "星空の発明家",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "研究所の最後の試験！ 3つの円が、それぞれちがうところでずれているよ。",
+    "discovery": "一つずつ確かめると、まちがいが見つかるね。名探偵だ！",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 24,
-        "frequency": -5,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 6,
         "phase": 0
+      },
+      {
+        "radius": 28,
+        "frequency": -3,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 16,
+        "frequency": 5,
+        "phase": 1.5707963267948966
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 90,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -5,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 6,
         "phase": 0
+      },
+      {
+        "radius": 28,
+        "frequency": 3,
+        "phase": 0.5235987755982988
+      },
+      {
+        "radius": 16,
+        "frequency": 5,
+        "phase": 4.71238898038469
       }
     ],
     "editable": {
@@ -1634,67 +1714,68 @@
       ]
     },
     "maxCircles": 3,
-    "D": 112.26575613249128,
-    "type": "shape"
+    "D": 107.09621842063332,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 31,
     "world": 4,
     "title": "城の魔法陣",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "魔法陣のまわりに、よけいな輪っかができているよ。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "大きな円から直すと、早く近づけるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -6,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 7,
-        "phase": 0.5235987755982988
+        "radius": 24,
+        "frequency": -3,
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -8,
-        "phase": 1.0471975511965976
+        "radius": 16,
+        "frequency": 5,
+        "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 2,
-        "phase": 1.5707963267948966
+        "radius": 10,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 100,
-        "frequency": -6,
         "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 60,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 16,
+        "frequency": 5,
+        "phase": 0
+      },
+      {
+        "radius": 10,
         "frequency": 7,
-        "phase": 0.5235987755982988
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -8,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 11,
-        "frequency": 2,
-        "phase": 1.5707963267948966
+        "radius": 6,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1725,77 +1806,78 @@
       ]
     },
     "maxCircles": 5,
-    "D": 116.37525510176123,
-    "type": "shape"
+    "D": 106.0015094232153,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 32,
     "world": 4,
     "title": "虹色のかぎ",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "かぎの形が、ゆがんでいるね。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "フーリエの魔法は、円の足し算なんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -7,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 17,
-        "frequency": 8,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 13,
-        "frequency": -2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 11,
-        "frequency": 3,
+        "radius": 25,
+        "frequency": 2,
         "phase": 0
       },
       {
-        "radius": 9,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 15,
+        "frequency": -3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 10,
+        "frequency": 4,
+        "phase": 0
+      },
+      {
+        "radius": 7,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": 8,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -7,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 17,
-        "frequency": 8,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 13,
+        "radius": 25,
         "frequency": -2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 11,
-        "frequency": 3,
         "phase": 0
       },
       {
-        "radius": 9,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 45,
+        "frequency": -3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 10,
+        "frequency": 4,
+        "phase": 0
+      },
+      {
+        "radius": 7,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": 8,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1831,87 +1913,88 @@
       ]
     },
     "maxCircles": 6,
-    "D": 117.49740422664665,
-    "type": "shape"
+    "D": 106.85391897352197,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 33,
     "world": 4,
     "title": "光の王冠",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "王冠がぶかぶか！ ほかにもずれがあるよ。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "円がたくさんでも、一つずつ調べれば大丈夫。",
     "target": [
       {
         "radius": 55,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 24,
-        "frequency": -8,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -3,
         "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 4,
-        "phase": 0.5235987755982988
+        "radius": 20,
+        "frequency": -7,
+        "phase": 0
       },
       {
-        "radius": 9,
+        "radius": 10,
+        "frequency": 9,
+        "phase": 0
+      },
+      {
+        "radius": 6,
         "frequency": -5,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 8,
-        "frequency": 6,
-        "phase": 1.5707963267948966
+        "radius": 4,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 3,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 2,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 110,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 100,
-        "frequency": -8,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -3,
         "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 4,
-        "phase": 0.5235987755982988
+        "radius": 20,
+        "frequency": 7,
+        "phase": 0
       },
       {
-        "radius": 9,
+        "radius": 10,
+        "frequency": 9,
+        "phase": 3.141592653589793
+      },
+      {
+        "radius": 6,
         "frequency": -5,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 8,
-        "frequency": 6,
-        "phase": 1.5707963267948966
+        "radius": 4,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 3,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 2,
+        "frequency": -9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -1952,97 +2035,98 @@
       ]
     },
     "maxCircles": 7,
-    "D": 118.37651794169315,
-    "type": "shape"
+    "D": 107.84989568840574,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 34,
     "world": 4,
     "title": "秘密の紋章",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "紋章は8つの円でできている。あやしいのはどれ？ まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "大きな円から直すと、早く近づけるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
         "radius": 24,
-        "frequency": -2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 3,
+        "frequency": -3,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -4,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 11,
+        "radius": 16,
         "frequency": 5,
-        "phase": 1.0471975511965976
+        "phase": 0
       },
       {
-        "radius": 9,
-        "frequency": -6,
-        "phase": 1.5707963267948966
+        "radius": 12,
+        "frequency": -7,
+        "phase": 0
       },
       {
         "radius": 8,
-        "frequency": 7,
+        "frequency": 9,
         "phase": 0
       },
       {
-        "radius": 7,
-        "frequency": -8,
-        "phase": 0.5235987755982988
+        "radius": 6,
+        "frequency": -11,
+        "phase": 0
+      },
+      {
+        "radius": 4,
+        "frequency": 3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 3,
+        "frequency": -5,
+        "phase": 1.5707963267948966
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -2,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 3,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 70,
+        "frequency": -3,
+        "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 5,
-        "phase": 1.0471975511965976
+        "radius": 16,
+        "frequency": 2,
+        "phase": 0
       },
       {
-        "radius": 9,
-        "frequency": -6,
-        "phase": 1.5707963267948966
+        "radius": 12,
+        "frequency": -7,
+        "phase": 0
       },
       {
         "radius": 8,
-        "frequency": 7,
+        "frequency": 9,
+        "phase": 3.141592653589793
+      },
+      {
+        "radius": 6,
+        "frequency": -11,
         "phase": 0
       },
       {
-        "radius": 7,
-        "frequency": -8,
-        "phase": 0.5235987755982988
+        "radius": 4,
+        "frequency": 3,
+        "phase": 1.5707963267948966
+      },
+      {
+        "radius": 3,
+        "frequency": -5,
+        "phase": 1.5707963267948966
       }
     ],
     "editable": {
@@ -2088,57 +2172,58 @@
       ]
     },
     "maxCircles": 8,
-    "D": 119.04520149926245,
-    "type": "shape"
+    "D": 108.01499895847799,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 35,
     "world": 4,
     "title": "鏡の迷宮",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "鏡の迷宮は、たてに細長い形。左右反対に回る2つの円がカギだよ。",
+    "discovery": "フーリエの魔法は、円の足し算なんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -3,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 4,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": -1,
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -5,
-        "phase": 1.0471975511965976
+        "radius": 15,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": -3,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 100,
-        "frequency": -3,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 4,
-        "phase": 0.5235987755982988
+        "radius": 30,
+        "frequency": 1,
+        "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -5,
-        "phase": 1.0471975511965976
+        "radius": 45,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": -3,
+        "phase": 0
       }
     ],
     "editable": {
@@ -2164,66 +2249,67 @@
       ]
     },
     "maxCircles": 4,
-    "D": 114.67850714061463,
-    "type": "shape"
+    "D": 109.85900054160332,
+    "type": "shape",
+    "mistakes": 2
   },
   {
     "id": 36,
     "world": 4,
     "title": "八つのリズム",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "8つのとがりが、そろっていないよ。 まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "円がたくさんでも、一つずつ調べれば大丈夫。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 22,
+        "frequency": -7,
+        "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 14,
+        "frequency": 9,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 5,
         "frequency": 5,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 13,
-        "frequency": -6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 11,
-        "frequency": 7,
         "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -4,
-        "phase": 0.5235987755982988
+        "radius": 22,
+        "frequency": -5,
+        "phase": 0
       },
       {
-        "radius": 17,
+        "radius": 14,
+        "frequency": -9,
+        "phase": 0
+      },
+      {
+        "radius": 30,
+        "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 5,
         "frequency": 5,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 13,
-        "frequency": -6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 11,
-        "frequency": 7,
         "phase": 0
       }
     ],
@@ -2255,77 +2341,78 @@
       ]
     },
     "maxCircles": 5,
-    "D": 116.37525510176123,
-    "type": "shape"
+    "D": 102.9153049842442,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 37,
     "world": 4,
     "title": "ひかりの万華鏡",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "万華鏡をのぞくと、何かがちがう… まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "大きな円から直すと、早く近づけるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 45,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 24,
-        "frequency": -5,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 17,
-        "frequency": 6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -7,
         "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 8,
-        "phase": 0.5235987755982988
+        "radius": 25,
+        "frequency": -5,
+        "phase": 0
       },
       {
-        "radius": 9,
-        "frequency": -2,
+        "radius": 18,
+        "frequency": 7,
         "phase": 1.0471975511965976
+      },
+      {
+        "radius": 10,
+        "frequency": -11,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 4,
+        "frequency": 4,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 45,
         "frequency": 1,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 100,
-        "frequency": -5,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 17,
-        "frequency": 6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 13,
-        "frequency": -7,
         "phase": 0
       },
       {
-        "radius": 11,
-        "frequency": 8,
-        "phase": 0.5235987755982988
+        "radius": 25,
+        "frequency": -5,
+        "phase": 3.141592653589793
       },
       {
-        "radius": 9,
-        "frequency": -2,
+        "radius": 50,
+        "frequency": 7,
         "phase": 1.0471975511965976
+      },
+      {
+        "radius": 10,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 4,
+        "frequency": 4,
+        "phase": 0
       }
     ],
     "editable": {
@@ -2361,86 +2448,87 @@
       ]
     },
     "maxCircles": 6,
-    "D": 117.49740422664665,
-    "type": "shape"
+    "D": 100.63915738915942,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 38,
     "world": 4,
     "title": "王国の花火",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "花火が大きすぎるし、リズムもちがう！ まちがいさがしだ！ お手本とくらべて、ずれている円を見つけよう。",
+    "discovery": "フーリエの魔法は、円の足し算なんだ。",
     "target": [
       {
-        "radius": 55,
+        "radius": 40,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 24,
-        "frequency": -6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 7,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -8,
+        "radius": 28,
+        "frequency": -6,
+        "phase": 0
+      },
+      {
+        "radius": 18,
+        "frequency": 8,
+        "phase": 0
+      },
+      {
+        "radius": 10,
+        "frequency": -11,
         "phase": 0.5235987755982988
       },
       {
-        "radius": 11,
-        "frequency": 2,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 9,
-        "frequency": -3,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 8,
+        "radius": 7,
         "frequency": 4,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 3,
+        "frequency": 10,
         "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 90,
         "frequency": 1,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 100,
-        "frequency": -6,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 17,
-        "frequency": 7,
         "phase": 0
       },
       {
-        "radius": 13,
-        "frequency": -8,
+        "radius": 28,
+        "frequency": 6,
+        "phase": 0
+      },
+      {
+        "radius": 18,
+        "frequency": 8,
+        "phase": 3.141592653589793
+      },
+      {
+        "radius": 10,
+        "frequency": -11,
         "phase": 0.5235987755982988
       },
       {
-        "radius": 11,
-        "frequency": 2,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 9,
-        "frequency": -3,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 8,
+        "radius": 7,
         "frequency": 4,
+        "phase": 0
+      },
+      {
+        "radius": 5,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 3,
+        "frequency": 10,
         "phase": 0
       }
     ],
@@ -2482,82 +2570,63 @@
       ]
     },
     "maxCircles": 7,
-    "D": 118.37651794169315,
-    "type": "shape"
+    "D": 96.78243642314446,
+    "type": "shape",
+    "mistakes": 3
   },
   {
     "id": 39,
     "world": 4,
     "title": "最後のひらめき",
-    "mission": "大きさ0の円を必要な分だけ使って、模様を作ろう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "8つの円に光をともそう。7つで作れたら、きみは節約の達人！",
+    "discovery": "たくさんの円も、大きい順に組み立てれば迷わないね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 45,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 24,
-        "frequency": -7,
         "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 8,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 13,
-        "frequency": -2,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 11,
-        "frequency": 3,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 9,
+        "radius": 25,
         "frequency": -4,
         "phase": 0
       },
       {
-        "radius": 8,
-        "frequency": 5,
-        "phase": 0.5235987755982988
+        "radius": 16,
+        "frequency": 6,
+        "phase": 0
       },
       {
-        "radius": 7,
-        "frequency": -6,
-        "phase": 1.0471975511965976
+        "radius": 12,
+        "frequency": -9,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 6,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 4,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 3,
+        "frequency": -7,
+        "phase": 0
       }
     ],
     "initial": [
       {
         "radius": 0,
         "frequency": 1,
-        "phase": 1.5707963267948966
-      },
-      {
-        "radius": 0,
-        "frequency": -7,
         "phase": 0
-      },
-      {
-        "radius": 0,
-        "frequency": 8,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 0,
-        "frequency": -2,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 0,
-        "frequency": 3,
-        "phase": 1.5707963267948966
       },
       {
         "radius": 0,
@@ -2566,13 +2635,33 @@
       },
       {
         "radius": 0,
-        "frequency": 5,
-        "phase": 0.5235987755982988
+        "frequency": 6,
+        "phase": 0
       },
       {
         "radius": 0,
-        "frequency": -6,
-        "phase": 1.0471975511965976
+        "frequency": -9,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 11,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": -2,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": 3,
+        "phase": 0
+      },
+      {
+        "radius": 0,
+        "frequency": -7,
+        "phase": 0
       }
     ],
     "editable": {
@@ -2602,7 +2691,7 @@
       ]
     },
     "maxCircles": 8,
-    "D": 119.04520149926245,
+    "D": 101.42484902626181,
     "type": "budget",
     "budgetGoal": 7
   },
@@ -2610,50 +2699,60 @@
     "id": 40,
     "world": 4,
     "title": "きみだけの魔法使い",
-    "mission": "ひとつ変えて、形のちがいを見つけよう。",
-    "discovery": "一つずつ変えて比べると、円の役割が見えてくるね。",
+    "mission": "最後の試練！ 4つの円がずれている。ここまでの魔法を全部使おう！",
+    "discovery": "大きな円から直すと、早く近づけるね。",
     "target": [
       {
-        "radius": 55,
+        "radius": 50,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 24,
-        "frequency": -8,
-        "phase": 0.5235987755982988
-      },
-      {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.0471975511965976
-      },
-      {
-        "radius": 13,
+        "radius": 26,
         "frequency": -3,
+        "phase": 0
+      },
+      {
+        "radius": 18,
+        "frequency": 5,
         "phase": 1.5707963267948966
+      },
+      {
+        "radius": 12,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "initial": [
       {
-        "radius": 150,
+        "radius": 100,
         "frequency": 1,
         "phase": 0
       },
       {
-        "radius": 100,
-        "frequency": -8,
-        "phase": 0.5235987755982988
+        "radius": 26,
+        "frequency": 3,
+        "phase": 0
       },
       {
-        "radius": 17,
-        "frequency": 2,
-        "phase": 1.0471975511965976
+        "radius": 18,
+        "frequency": 5,
+        "phase": 4.71238898038469
       },
       {
-        "radius": 13,
-        "frequency": -3,
-        "phase": 1.5707963267948966
+        "radius": 40,
+        "frequency": -7,
+        "phase": 0
+      },
+      {
+        "radius": 8,
+        "frequency": 9,
+        "phase": 0
       }
     ],
     "editable": {
@@ -2676,10 +2775,16 @@
         "radius",
         "frequency",
         "phase"
+      ],
+      "4": [
+        "radius",
+        "frequency",
+        "phase"
       ]
     },
-    "maxCircles": 4,
-    "D": 114.67850714061463,
-    "type": "shape"
+    "maxCircles": 5,
+    "D": 109.60802890299597,
+    "type": "shape",
+    "mistakes": 4
   }
 ]

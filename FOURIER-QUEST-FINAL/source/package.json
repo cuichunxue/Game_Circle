@@ -1,11 +1,12 @@
 {
   "name": "fourier-quest",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node tests.mjs"
+    "release": "node build-release.mjs",
+    "test": "node tests.mjs && node build.mjs && node integration-tests.mjs && node journey-tests.mjs && node canvas-tests.mjs && node delight-tests.mjs"
   },
   "dependencies": {
     "react": "19.1.0",
