@@ -1423,7 +1423,10 @@ function App() {
         </section>
         <footer>
           <span>
-            FOURIER QUEST <i>·</i> 小さな「なぜ？」が、大きな魔法に。
+            FOURIER QUEST <i>·</i> 小さな「なぜ？」が、大きな魔法に。 <i>·</i> © 2026 cuichunxue <i>·</i>{" "}
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank" rel="license noopener">
+              CC BY-NC-ND 4.0
+            </a>
           </span>
           <span>
             {saved === null ? "保存中…" : saved ? "✓ この端末に自動保存" : "保存できませんでした。端末の空き容量を確認してください。"}

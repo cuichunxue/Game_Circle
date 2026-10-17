@@ -28,3 +28,7 @@ Scoring uses 512 time-aligned samples, E = RMS distance, S = 100 max(0,1-E/D). D
 Creation supports direct editing up to 128 circles. Hand-drawn closed contours are arc-length resampled to 256 points, centered, and decomposed by direct complex DFT. Strongest 8/16/32/64/128 coefficients can be retained. The bounded DFT is used instead of an FFT library to keep the static bundle self-contained.
 
 Progress, best unaided scores, settings, current puzzle and up to 100 discoveries save locally. Browsing data deletion removes them. First interaction enables Web Audio as required by browsers. Hints are unlimited and free; ink colours unlock at 6/12/24/45/80 stars; 12 stickers are derived from progress and the gallery. Reduced motion disables continuous circle movement and decorative animation.
+
+## License
+
+© 2026 cuichunxue. Licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) (see `../LICENSE`). Bundled React / React DOM remain under the MIT License.

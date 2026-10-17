@@ -2,6 +2,7 @@
   "name": "fourier-quest",
   "version": "1.2.0",
   "private": true,
+  "license": "CC-BY-NC-ND-4.0",
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
