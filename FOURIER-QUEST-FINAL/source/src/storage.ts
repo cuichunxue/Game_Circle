@@ -1,0 +1,41 @@
+export async function readSave() {
+  return new Promise<any>((resolve) => {
+    try {
+      const r = indexedDB.open("fourier-quest", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("data");
+      r.onerror = () => resolve(null);
+      r.onsuccess = () => {
+        const db = r.result,
+          q = db.transaction("data").objectStore("data").get("save");
+        q.onsuccess = () => {
+          resolve(q.result || null);
+          db.close();
+        };
+        q.onerror = () => resolve(null);
+      };
+    } catch {
+      resolve(null);
+    }
+  });
+}
+export async function writeSave(data: any) {
+  return new Promise<boolean>((resolve) => {
+    try {
+      const r = indexedDB.open("fourier-quest", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("data");
+      r.onerror = () => resolve(false);
+      r.onsuccess = () => {
+        const db = r.result,
+          t = db.transaction("data", "readwrite");
+        t.objectStore("data").put(data, "save");
+        t.oncomplete = () => {
+          db.close();
+          resolve(true);
+        };
+        t.onerror = () => resolve(false);
+      };
+    } catch {
+      resolve(false);
+    }
+  });
+}
